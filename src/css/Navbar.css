@@ -1,0 +1,249 @@
+.navbar {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    min-height: 50px;
+    width: 100%;
+    position: sticky;
+    z-index: 100;
+    top: 0;
+    margin: 0;
+}
+
+.navbar-quora-header-1 {
+    background-color: #a82723;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-quora-search-1 {
+    display: none;
+}
+
+.navbar-quora-logo img{
+    height: 30px;
+}
+
+.navbar-quora-logo {
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8SRs6pdIh-eG1Z3QSDc78bWYCtYNCLrIp6Q&s");
+    background-position: center;
+    height: 35px;
+    width: 130px;
+    background-size: cover;
+}
+
+.navbar-quora-add {
+    display: none;
+
+}
+
+.navbar-quora-header-2 {
+    display: flex;
+}
+
+.navbar-quora-icons {
+    display: flex;
+}
+
+.navbar-quora-icon {
+    color: grey;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;  
+    height: auto;
+    width: 100%;  
+}
+
+.navbar-quora-icon > .MuiSvgIcon-root {
+    font-size: 32px;
+}
+
+.navbar-quora-icon:active {
+    border-bottom: 5px solid #a82723;
+}
+
+.navbar-quora-icon:hover{
+    color: rgb(172, 172, 172);
+    background-color: whitesmoke;
+    border-radius: 5px;
+}
+
+.navbar-quora-search {
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(208, 208, 208);
+    border-radius: 5px;
+    padding: 0 5px;
+    transition: 0.3s;
+    margin: auto;
+    z-index: 99;
+}
+
+.navbar-quora-search > .MuiSvgIcon-root {
+    color: grey;
+}
+
+.navbar-quora-search:hover {
+    border: 1px solid rgb(52, 116, 255);
+}
+
+.navbar-quora-search input[type="text"] {
+    border: none;
+    outline: none;
+    width: 300px;
+    padding: 5px;
+    font-size: 14px;
+    transition: width 0.3s ease;
+}
+
+.navbar-quora-search input[type="text"]:focus {
+    width: 500px;
+}
+
+/* .navbar-quora-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+}
+
+.navbar-quora-avatar > .MuiAvatar-root {
+    margin: 5px 15px;
+    height: 30px;
+    width: 30px;
+} */
+
+.navbar-quora-try-quora-btn {
+    margin: 0 20px;
+    padding: 0px 15px;
+    min-width: 100px;
+    height: 30px;
+    margin-right: 20px;
+    align-self: center;
+    color: rgb(169, 169, 169);
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 20px;
+    border: 2px solid rgb(208, 208, 208);
+    background-color: white;
+}
+
+.navbar-quora-try-quora-btn:hover {
+    background-color: whitesmoke;
+}
+
+.navbar-quora-language-icon > .MuiSvgIcon-root{
+    font-size: 32px;
+}
+
+.navbar-quora-question-button {
+    height: 30px;
+    align-self: center;
+    display: flex;
+}
+
+.navbar-quora-question-button > .MuiSvgIcon-root {
+    align-self: center;
+    height: 100%;
+    min-width: 30px;
+    padding: 0px 8px 0px 5px;
+    color: white;
+    border-radius: 0 20px 20px 0;
+    transition: all 0.2s ease-in-out;
+    background-color: #bf322d;
+}
+
+.navbar-quora-question-button > .MuiSvgIcon-root:hover {
+    background-color: #a82723;
+}
+
+
+.navbar-quora-question-btn {
+    padding: 0 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    background-color: #bf322d;
+    border-radius: 20px 0 0 20px;
+    border: none;
+    border-right: 1px solid rgb(144, 43, 43);
+    height: 30px;
+    min-width: 100px;
+    transition: all 0.2s ease-in-out;
+}
+
+.navbar-quora-question-btn:hover {
+    background-color: #a82723;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 1024px){
+    .navbar {
+        display: block;
+    }
+
+    .navbar-quora-header-1 {
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0px;
+        height: 40px;
+        background-color: #a82723;
+        color: white;
+        padding: 0 10px;
+    }
+
+    .navbar-quora-search-1 {
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-quora-logo img {
+        height: 25px;
+    }
+
+    .navbar-quora-logo {
+        background-image: url("https://storyxpress.co/blog/content/images/size/w2000/2019/04/quoralogo.jpg");
+        height: 30px;
+        width: 100px;
+    }
+
+    .navbar-quora-add {
+        display: flex;
+        align-items: center;
+    }
+
+    .navbar-quora-header-2 {
+        background-color: whitesmoke;
+        justify-content: space-around;
+
+    }
+
+    .navbar-quora-icon {
+        min-width: 30px;
+        padding: 5px;
+        border-radius: 0px;
+        border: 1px solid rgb(203, 203, 203);
+    }
+
+    .navbar-quora-icon > .MuiSvgIcon-root {
+        font-size: 32px;
+    }
+
+    .navbar-quora-search, .navbar-quora-try-quora-btn, .navbar-quora-question-button {
+        display: none;
+    }
+}

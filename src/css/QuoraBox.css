@@ -1,0 +1,64 @@
+.quora-box {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: white;
+}
+
+.quora-box-info {
+    display: flex;
+    gap: 10px;
+    height: 32px;
+    padding: 5px;
+}
+
+.quora-box-info > .MuiAvatar-root {
+    height: 32px;
+    width: 32px;
+}
+
+.quora-box-info > input {
+    border: 1px solid #ccc;
+    background-color: whitesmoke;
+    border-radius: 20px;
+    padding: 10px;
+    width: 100%;
+    font-size: 14px;
+}
+
+.quora-box-options {
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.quora-box-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(104, 104, 104);
+    font-weight: 600;
+    cursor: pointer;
+    width: 33%;
+    border: none;
+    background-color: white;
+    border-radius: 20px;
+}
+
+.quora-box-option:hover{
+    background-color: whitesmoke;
+}
+
+.quora-box-option > p {
+    margin: 0;
+}
+
+.quora-box-option-pipe{
+    margin: 0;
+    color: rgb(222, 222, 222);
+}
+
+.quora-box-option > .MuiSvgIcon-root {
+    margin-right: 5px;
+    font-size: x-large;
+}
