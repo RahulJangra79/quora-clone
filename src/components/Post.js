@@ -1,9 +1,14 @@
 import React from "react";
 import "../css/Post.css";
 import Avatar from "@mui/material/Avatar";
-import { ArrowUpwardOutlined, ArrowDownwardOutlined, ChatBubbleOutlineOutlined, RepeatOutlined, ShareOutlined, MoreHorizOutlined } from "@mui/icons-material";
-import Image from '../images/history.png';
-
+import {
+  ArrowUpwardOutlined,
+  ArrowDownwardOutlined,
+  ChatBubbleOutlineOutlined,
+  RepeatOutlined,
+  MoreHorizOutlined,
+} from "@mui/icons-material";
+import Image from "../images/history.png";
 
 function Post() {
   return (
@@ -22,22 +27,26 @@ function Post() {
         <div className="post-ans">
           <p></p>
         </div>
-        <img
-          src={Image}
-          alt=""
-        />
+        <img src={Image} alt="" />
       </div>
       <div className="post-footer">
-        <div className="post-footer-action">
-          <ArrowUpwardOutlined />
-          <ArrowDownwardOutlined />
-        </div>
-        
-        <RepeatOutlined />
-        <ChatBubbleOutlineOutlined />
-
         <div className="post-footer-left">
-          <ShareOutlined />
+          <div className="post-footer-left-1">
+            <ArrowUpwardOutlined />
+            Upvote {"335"}
+          </div>
+
+          <div className="post-footer-left-2">
+            <ArrowDownwardOutlined />
+          </div>
+        </div>
+
+        <div className="post-footer-middle">
+          <RepeatOutlined />
+          <ChatBubbleOutlineOutlined />
+        </div>
+
+        <div className="post-footer-right">
           <MoreHorizOutlined />
         </div>
       </div>
