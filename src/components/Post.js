@@ -21,7 +21,10 @@ function Post() {
 
       <div className="post-body">
         <div className="post-que">
-          <p>Question</p>
+          <p>
+            Question nidjcs ciunsd csdcnsdc sdjcsd fdc d efe fodnfd woifn fwfwf
+            wfw fwfwfwfwe fewfwf wqefwef we fwrf wfwf wrf wr ?
+          </p>
           <button className="post-que-ans">Answer</button>
         </div>
         <div className="post-ans">
@@ -31,19 +34,23 @@ function Post() {
       </div>
       <div className="post-footer">
         <div className="post-footer-left">
-          <div className="post-footer-left-1">
+          <button className="post-footer-left-1">
             <ArrowUpwardOutlined />
-            Upvote {"335"}
-          </div>
+            Upvote . {"335"}
+          </button>
 
-          <div className="post-footer-left-2">
+          <button className="post-footer-left-2">
             <ArrowDownwardOutlined />
-          </div>
+          </button>
         </div>
 
         <div className="post-footer-middle">
-          <RepeatOutlined />
-          <ChatBubbleOutlineOutlined />
+          <div className="post-footer-middle-1">
+            <RepeatOutlined /> {"37"}
+          </div>
+          <div className="post-footer-middle-1">
+            <ChatBubbleOutlineOutlined /> {"4"}
+          </div>
         </div>
 
         <div className="post-footer-right">

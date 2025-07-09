@@ -1,4 +1,31 @@
 .sidebar {
-    margin-right: 10px;
-    flex: 0.2;
+    flex: 0.1;
+}
+
+.sidebar_bottom {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sidebar_bottom > a{
+    margin-right: 5px;
+    color: gray;
+    font-size: 14px;
+}
+
+.sidebar_bottom > a:hover{
+    text-decoration: underline;
+}
+
+
+@media (max-width: 768px){
+    .sidebar{
+        display: none;
+    }
+}
+
+@media (max-width: 1024px){
+    .sidebar{
+        flex: 0.05;
+    }
 }

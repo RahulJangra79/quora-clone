@@ -99,6 +99,7 @@
     border: none;
     outline: none;
     width: 300px;
+    min-width: 150px;
     padding: 5px;
     font-size: 14px;
     transition: width 0.3s ease;

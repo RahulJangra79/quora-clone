@@ -7,7 +7,7 @@
 .sidebar-option{
     display: flex;
     align-items: center;
-    padding: 10px;
+    padding: 8px;
     cursor: pointer;
     height: 30px;
 }
@@ -19,7 +19,6 @@
 
 .sidebar-option > img{
     height: 30px;
-    margin-left: 20px;
     border-radius: 5px;
 }
 

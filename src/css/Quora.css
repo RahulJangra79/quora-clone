@@ -1,5 +1,12 @@
 .quora-content {
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+@media (max-width: 768px){
+    .quora-content{
+        margin-top: 0;
+    }
 }
