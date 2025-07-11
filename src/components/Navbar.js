@@ -9,9 +9,14 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import LanguageIcon from "@mui/icons-material/Language";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Avatar from "@mui/material/Avatar";
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import { useSelector } from "react-redux";
+import { selectUser } from "../features/userSlice";
+import { auth } from "../firebase";
 
 function Navbar() {
+  const user = useSelector(selectUser);
+
   return (
     <div className="navbar">
       <div className="navbar-quora-header-1">
@@ -20,9 +25,7 @@ function Navbar() {
           <p>Search</p>
         </div>
 
-        <div className="navbar-quora-logo">
-          
-        </div>
+        <div className="navbar-quora-logo"></div>
 
         <div className="navbar-quora-add">
           <AddCircleOutlineOutlinedIcon />
@@ -46,7 +49,7 @@ function Navbar() {
         <div className="navbar-quora-icon">
           <NotificationsNoneOutlinedIcon />
         </div>
-        
+
         <div className="navbar-quora-search">
           <SearchOutlinedIcon />
           <input type="text" placeholder="Search Quora" />
@@ -55,7 +58,7 @@ function Navbar() {
         <button className="navbar-quora-try-quora-btn">Try Quora+</button>
 
         <div className="navbar-quora-avatar navbar-quora-icon">
-          <Avatar />
+          <Avatar onClick={() => auth.signOut()} src={user.photo} />
         </div>
 
         <div className="navbar-quora-icon">

@@ -1,19 +1,18 @@
 import React from 'react';
 import SidebarOptions from './SidebarOptions';
 import '../css/Sidebar.css';
-import { Link } from 'react-router-dom';
 
 function Sidebar() {
   return (
     <div className='sidebar'>
       <SidebarOptions />
       <div className='sidebar_bottom'>
-        <a>About</a>
-        <a>Terms</a>
-        <a>Privacy</a>
-        <a>Acceptable Use</a>
-        <a>Advertise</a>
-        <a>Press</a>
+        <a href='#'>About</a>
+        <a href='#'>Terms</a>
+        <a href='#'>Privacy</a>
+        <a href='#'>Acceptable Use</a>
+        <a href='#'>Advertise</a>
+        <a href='#'>Press</a>
       </div>
     </div>
   )
