@@ -10,11 +10,18 @@
 .sidebar_bottom > a{
     margin-right: 5px;
     color: gray;
-    font-size: 14px;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: none;
 }
 
-.sidebar_bottom > a:hover{
+.sidebar_bottom >a:hover{
     text-decoration: underline;
+}
+
+.sidebar_bottom>a:not(:first-child)::before {
+  content: " · ";
+  color: gray;
 }
 
 

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import "../css/Navbar.css";
 import ListAltRoundedIcon from "@mui/icons-material/ListAltRounded";
 import HomeIcon from "@mui/icons-material/Home";
@@ -12,10 +12,46 @@ import Avatar from "@mui/material/Avatar";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
-import { auth } from "../firebase";
+import db, { auth } from "../firebase";
+import firebase from "firebase/compat/app";
+import AddQuePostModal from "./AddQuePostModal";
 
 function Navbar() {
   const user = useSelector(selectUser);
+  const [ismodalOpen, setIsModalOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const questionName = input;
+
+  const handleQuestion = (e) => {
+    e.preventDefault();
+    setIsModalOpen(false);
+
+    if (questionName) {
+      db.collection("questions").add({
+        user: user,
+        question: input,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+
+    setInput("");
+  };
+
+  const handlePost = (e, imageUrl = "") => {
+    e.preventDefault();
+    setIsModalOpen(false);
+
+    if (input) {
+      db.collection("posts").add({
+        user: user,
+        post: input,
+        imageUrl: imageUrl || "",
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+
+    setInput("");
+  };
 
   return (
     <div className="navbar">
@@ -66,9 +102,24 @@ function Navbar() {
         </div>
 
         <div className="navbar-quora-question-button">
-          <button className="navbar-quora-question-btn">Add Question</button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="navbar-quora-question-btn"
+          >
+            Add Question
+          </button>
           <KeyboardArrowDownIcon />
         </div>
+
+        <AddQuePostModal
+            isOpen={ismodalOpen}
+            onRequestClose={() => setIsModalOpen(false)}
+            user={user}
+            input={input}
+            setInput={setInput}
+            handleQuestion={handleQuestion}
+            handlePost={handlePost}
+          />
       </div>
     </div>
   );

@@ -1,0 +1,293 @@
+/* .modal__title {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 0;
+  border-bottom: 1px solid #ddd;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #f8f8f8;
+}
+
+.modal__title h5 {
+  padding-bottom: 8px;
+  position: relative;
+}
+
+.modal__title .active-tab {
+  color: #2e69ff;
+  border-bottom: 3px solid #2e69ff;
+}
+
+.modal__info {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #fff;
+}
+
+.modal__info > p{
+  padding-left: 10px;
+}
+
+.modal__Field {
+  padding: 15px 20px;
+  background: white;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.modal__Field input[type="text"],
+.modal__Field textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.modal__fileInput {
+  margin-top: 10px;
+}
+
+.modal__imagePreview {
+  margin-top: 10px;
+  max-height: 200px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.modal__imageContainer {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+  max-width: 100%;
+}
+
+.modal__imagePreview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal__imageClose {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 2px;
+  color: red;
+}
+
+.modal__buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  border-top: 1px solid #ddd;
+  background-color: #f8f8f8;
+}
+
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+}
+
+.modal__buttons .cancle {
+  background: transparent;
+  border: none;
+  margin-right: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal__buttons .add {
+  background-color: #2e69ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.modal__buttons.sticky-footer {
+  margin-top: auto;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #eee;
+  background: #fff;
+} */
+
+
+
+
+.ReactModal__Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.ReactModal__Content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 500px;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 8px;
+  overflow-y: auto;
+  padding: 0;
+
+    display: flex;
+  flex-direction: column;
+
+}
+
+/* Title styles */
+.modal__title {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 0;
+  border-bottom: 1px solid #ddd;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #f8f8f8;
+}
+
+.modal__title h5 {
+  padding-bottom: 8px;
+  position: relative;
+}
+
+.modal__title .active-tab {
+  color: #2e69ff;
+  border-bottom: 3px solid #2e69ff;
+}
+
+/* Info section */
+.modal__info {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #fff;
+}
+
+.modal__info>p {
+  padding-left: 10px;
+}
+
+.modal__scope {
+  width: 100px;
+  display: flex;
+  padding: 10px;
+}
+
+/* Input and Textarea */
+.modal__Field {
+  padding: 15px 20px;
+  background: white;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.modal__Field input[type="text"],
+.modal__Field textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+/* File input */
+.modal__fileInput {
+  margin-top: 10px;
+}
+
+/* Image preview & container */
+.modal__imageContainer {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+  max-width: 100%;
+}
+
+.modal__imagePreview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Image close icon */
+.modal__imageClose {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 2px;
+  color: red;
+}
+
+/* Footer buttons */
+.modal__buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 20px;
+  border-top: 1px solid #ddd;
+  background-color: #f8f8f8;
+    min-height: 60px;
+  flex-shrink: 0;
+}
+
+.modal__buttons .cancle {
+  background: transparent;
+  border: none;
+  margin-right: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal__buttons .add {
+  background-color: #2e69ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal__buttons .add:hover {
+  background-color: #1c54e2;
+}
+
+/* Sticky footer section */
+.sticky-footer {
+  position: sticky;
+  bottom: 0;
+}
+
+.modal__buttons.sticky-footer {
+  margin-top: auto;
+  padding: 12px 20px;
+  gap: 10px;
+  border-top: 1px solid #eee;
+  background: #fff;
+}

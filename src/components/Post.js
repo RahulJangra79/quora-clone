@@ -1,4 +1,3 @@
-import React from "react";
 import "../css/Post.css";
 import Avatar from "@mui/material/Avatar";
 import {
@@ -8,35 +7,43 @@ import {
   RepeatOutlined,
   MoreHorizOutlined,
 } from "@mui/icons-material";
-import Image from "../images/history.png";
 
-function Post() {
+function Post({ id, post, imageUrl, timestamp, user }) {
   return (
     <div className="post">
       <div className="post-info">
-        <Avatar />
-        <h5>Username </h5>
-        <small>Timestamp</small>
+        <div className="post-info-avatar">
+          <Avatar src={user.photo} />
+        </div>
+
+        <div className="post-info-detail">
+          <div className="post-info-detail-1">
+            <h5> {user.display} </h5>
+            <small>Follow</small>
+          </div>
+          <div className="post-info-detail-2">
+            <p>
+            {new Date(timestamp?.toDate()).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+          </div>
+        </div>
       </div>
 
       <div className="post-body">
         <div className="post-que">
-          <p>
-            Question nidjcs ciunsd csdcnsdc sdjcsd fdc d efe fodnfd woifn fwfwf
-            wfw fwfwfwfwe fewfwf wqefwef we fwrf wfwf wrf wr ?
-          </p>
-          <button className="post-que-ans">Answer</button>
+          <p>{post}</p>
         </div>
-        <div className="post-ans">
-          <p></p>
-        </div>
-        <img src={Image} alt="" />
+        <img src={imageUrl} alt="" />
       </div>
       <div className="post-footer">
         <div className="post-footer-left">
           <button className="post-footer-left-1">
             <ArrowUpwardOutlined />
-            Upvote . {"335"}
+            Upvote &nbsp;·&nbsp; {"335"}
+
           </button>
 
           <button className="post-footer-left-2">
