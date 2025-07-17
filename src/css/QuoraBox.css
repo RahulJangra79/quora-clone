@@ -44,6 +44,7 @@
     border: none;
     background-color: white;
     border-radius: 20px;
+    text-decoration: none;
 }
 
 .quora-box-option:hover {

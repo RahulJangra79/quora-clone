@@ -1,4 +1,65 @@
-import { useState } from "react";
+// import { useState } from "react";
+// import "./Login.css";
+// import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+// import { auth, provider } from "../../firebase";
+// import quoraLogo from "../../images/Quora-logo.png";
+
+// function Login() {
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+
+//   const isMobileDevice = () => {
+//     const ua = navigator.userAgent || navigator.vendor || window.opera;
+//     return /android|ipad|iphone|ipod/i.test(ua);
+//   };
+
+//   const signIn = () => {
+//     if (isMobileDevice()) {
+//       auth.signInWithRedirect(provider);
+//     } else {
+//       auth.signInWithPopup(provider).catch((e) => {
+//         alert(e.message);
+//         console.log(e);
+//       });
+//     }
+//   };
+
+//   // const signIn = () => {
+//   //   auth.signInWithPopup(provider).catch((e) => {
+//   //     alert(e.message);
+//   //     console.log(auth);
+//   //   });
+//   // };
+
+
+//   const handleSignIn = (e) => {
+//     e.preventDefault();
+
+//     auth
+//       .signInWithEmailAndPassword(email, password)
+//       .then((auth) => {
+//         console.log(auth);
+//       })
+//       .catch((e) => alert(e.message));
+//   };
+
+//   const registerSignIn = (e) => {
+//     e.preventDefault();
+
+//     auth
+//       .createUserWithEmailAndPassword(email, password)
+//       .then((auth) => {
+//         if (auth) {
+//           console.log(auth);
+//         }
+//       })
+//       .catch((e) => alert(e.message));
+//   };
+
+
+
+
+import { useState, useEffect } from "react";
 import "./Login.css";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { auth, provider } from "../../firebase";
@@ -8,36 +69,62 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signIn = () => {
-    auth.signInWithPopup(provider).catch((e) => {
-      alert(e.message);
-      console.log(auth);
-    });
+  // Detect if user is on mobile device
+  const isMobileDevice = () => {
+    return /android|ipad|iphone|ipod/i.test(navigator.userAgent.toLowerCase());
   };
 
+  // Google Sign-in Handler
+  const signIn = () => {
+    if (isMobileDevice()) {
+      auth.signInWithRedirect(provider);
+    } else {
+      auth
+        .signInWithPopup(provider)
+        .catch((e) => {
+          alert(e.message);
+          console.log(e);
+        });
+    }
+  };
+
+  // Handle redirect result after mobile sign-in
+  useEffect(() => {
+    auth
+      .getRedirectResult()
+      .then((result) => {
+        if (result.user) {
+          console.log("Redirect login successful:", result.user);
+          // Optional: Dispatch user to Redux or trigger navigation
+        }
+      })
+      .catch((err) => {
+        console.error("Redirect error:", err.message);
+      });
+  }, []);
+
+  // Email/Password Login
   const handleSignIn = (e) => {
     e.preventDefault();
-
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        console.log(auth);
+      .then((authUser) => {
+        console.log(authUser);
       })
       .catch((e) => alert(e.message));
   };
 
+  // Email/Password Sign-up
   const registerSignIn = (e) => {
     e.preventDefault();
-
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        if (auth) {
-          console.log(auth);
+      .then((authUser) => {
+        if (authUser) {
+          console.log(authUser);
         }
       })
       .catch((e) => alert(e.message));
-
   };
 
   return (
@@ -113,7 +200,14 @@ function Login() {
               <p>
                 You are now logged out of this browser, but are still logged in
                 with other browsers.{" "}
-                <span style={{ color: "#1a5aff", fontWeight: "350", textDecoration: "underline", cursor: "pointer" }}>
+                <span
+                  style={{
+                    color: "#1a5aff",
+                    fontWeight: "350",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  }}
+                >
                   Log out of all browsers.
                 </span>
               </p>
