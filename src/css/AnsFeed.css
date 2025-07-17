@@ -1,0 +1,139 @@
+.ans-feed {
+    flex: 0.6;
+    max-width: 650px;
+    min-width: 300px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.ans-feed-header {
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: gray;
+}
+
+.ans-feed-question {
+    padding: 20px;
+    border: 1px solid #eee;
+}
+
+.question-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.question-body-user-info{
+  display: flex;
+  align-items: center;
+}
+
+.question-body-user-info>h5{
+  padding-left: 10px;
+}
+
+.question-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+}
+
+.question-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #666;
+}
+
+.question-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.question-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.answer-btn,
+.follow-btn {
+    padding: 6px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    background-color: #eee;
+    color: gray;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.answer-btn:hover,
+.follow-btn:hover {
+    background-color: #d0dbff;
+}
+
+.question-icons {
+    display: flex;
+    gap: 10px;
+    color: #888;
+    cursor: pointer;
+}
+
+
+
+
+
+@media (max-width: 768px) {
+  .ans-feed {
+    flex: 1;
+    max-width: 100%;
+    border-bottom: none;
+  }
+
+  .ans-feed-header {
+    font-size: 18px;
+    padding: 16px 0;
+    text-align: center;
+  }
+
+  .ans-feed-question {
+    padding: 16px;
+    border: 1px solid #eee;
+  }
+
+  .question-text {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .question-meta {
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .question-actions {
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .question-buttons {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .answer-btn,
+  .follow-btn,
+  .pass-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  .question-icons {
+    gap: 12px;
+    font-size: 18px;
+  }
+}

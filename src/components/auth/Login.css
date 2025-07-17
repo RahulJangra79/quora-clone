@@ -22,12 +22,18 @@
   width: 700px;
   background-color: rgb(255, 255, 255);
   border-radius: 5px;
+  padding-top: 15px;
 }
 
 .login__logo {
-  display: flex;
-  justify-content: center;
-  height: 100px;
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8SRs6pdIh-eG1Z3QSDc78bWYCtYNCLrIp6Q&s");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 100%;
+  max-width: 300px;
+  height: 80px;
+  margin: 0 auto;
 }
 
 .login__desc {
@@ -120,10 +126,10 @@
 }
 
 .login__inputField {
-  height: auto; 
+  height: auto;
 }
 
-.login__inputField > input {
+.login__inputField>input {
   padding: 12px;
   width: 100%;
   font-size: 15px;
@@ -134,7 +140,7 @@
   transition: border 0.3s ease;
 }
 
-.login__inputField > input:focus {
+.login__inputField>input:focus {
   border: 1px solid #007bff;
 }
 
@@ -238,4 +244,58 @@
 .login__footer>p:not(:first-child)::before {
   content: " · ";
   color: gray;
+}
+
+@media (max-width: 500px) {
+  .login {
+    align-items: flex-start;
+    padding: 20px;
+    height: auto;
+  }
+
+  .login__container {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    padding: 10px;
+  }
+
+  .login__auth {
+    flex-direction: column;
+    margin-top: 20px;
+  }
+
+  .login__authOptions {
+    flex: none;
+    border-right: none;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 20px;
+    padding: 15px;
+  }
+
+  .login__emailPass {
+    flex: none;
+    padding: 15px;
+  }
+
+  .login__logo {
+    height: 60px;
+    max-width: 200px;
+    padding: 15px 0;
+  }
+
+  .login__lang {
+    flex-direction: column;
+  }
+
+  .login__footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .login__footer>p {
+    margin: 0 5px;
+  }
 }

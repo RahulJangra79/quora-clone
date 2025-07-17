@@ -65,14 +65,14 @@
     font-size: 32px;
 }
 
-.navbar-quora-icon:active {
-    border-bottom: 5px solid #a82723;
-}
-
 .navbar-quora-icon:hover {
     color: rgb(172, 172, 172);
     background-color: whitesmoke;
     border-radius: 5px;
+}
+
+.active-tab {
+  color: #d04e4e;
 }
 
 .navbar-quora-search {
@@ -109,19 +109,6 @@
 .navbar-quora-search input[type="text"]:focus {
     width: 500px;
 }
-
-/* .navbar-quora-avatar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: sticky;
-}
-
-.navbar-quora-avatar > .MuiAvatar-root {
-    margin: 5px 15px;
-    height: 30px;
-    width: 30px;
-} */
 
 .navbar-quora-try-quora-btn {
     margin: 0 20px;
@@ -185,13 +172,6 @@
 .navbar-quora-question-btn:hover {
     background-color: #a82723;
 }
-
-
-
-
-
-
-
 
 @media (max-width: 1024px) {
     .navbar {

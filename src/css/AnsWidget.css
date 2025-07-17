@@ -1,0 +1,38 @@
+.ans-widget-topics {
+  width: 250px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fff;
+  height: fit-content;
+}
+
+.ans-widget-topics h4 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.ans-widget-topics ul {
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.ans-widget-topics li {
+  margin-bottom: 8px;
+  color: #444;
+  font-size: 14px;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.ans-widget-topics li:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px){
+  .ans-widget-topics {
+  display: none;
+}
+
+}

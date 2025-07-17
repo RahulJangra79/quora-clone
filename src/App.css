@@ -4,3 +4,12 @@
     height: auto;
     width: auto;
 }
+
+.App {
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.App::-webkit-scrollbar {
+  display: none;
+}

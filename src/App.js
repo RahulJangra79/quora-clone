@@ -4,6 +4,9 @@ import "./App.css";
 import Quora from "./components/Quora";
 import Answer from "./components/Answer";
 import Navbar from "./components/Navbar";
+import Notification from "./components/Notification";
+import Groups from "./components/Groups";
+import Following from "./components/Following";
 import Login from "./components/auth/Login";
 import { login, logout, selectUser } from "./features/userSlice";
 import { useEffect } from "react";
@@ -33,21 +36,20 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {user ? (
-          <>
-            <Navbar />
-            <Routes>
+        {user && <Navbar />}
+        <Routes>
+          {user ? (
+            <>
               <Route path="/" element={<Quora />} />
-              <Route path="/following" element={<Answer />} />
+              <Route path="/following" element={<Following />} />
               <Route path="/answer" element={<Answer />} />
-              <Route path="/groups" element={<Answer />} />
-              <Route path="/notification" element={<Answer />} />
-              <Route path="/language" element={<Answer />} />
-            </Routes>
-          </>
-        ) : (
-          <Login />
-        )}
+              <Route path="/groups" element={<Groups />} />
+              <Route path="/notification" element={<Notification />} />
+            </>
+          ) : (
+            <Route path="*" element={<Login />} />
+          )}
+        </Routes>
       </BrowserRouter>
     </div>
   );

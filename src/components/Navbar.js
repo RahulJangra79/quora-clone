@@ -13,47 +13,13 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
-// import db, { auth } from "../firebase";
-// import firebase from "firebase/compat/app";
 import AddQuePostModal from "./AddQuePostModal";
 import { Link } from "react-router-dom";
 
 function Navbar() {
   const user = useSelector(selectUser);
   const [ismodalOpen, setIsModalOpen] = useState(false);
-  // const [input, setInput] = useState("");
-  // const questionName = input;
-
-  // const handleQuestion = (e) => {
-  //   e.preventDefault();
-  //   setIsModalOpen(false);
-
-  //   if (questionName) {
-  //     db.collection("questions").add({
-  //       user: user,
-  //       question: input,
-  //       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-  //     });
-  //   }
-
-  //   setInput("");
-  // };
-
-  // const handlePost = (e, imageUrl = "") => {
-  //   e.preventDefault();
-  //   setIsModalOpen(false);
-
-  //   if (input) {
-  //     db.collection("posts").add({
-  //       user: user,
-  //       post: input,
-  //       imageUrl: imageUrl || "",
-  //       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-  //     });
-  //   }
-
-  //   setInput("");
-  // };
+  const [activeTab, setActiveTab] = useState("home");
 
   return (
     <div className="navbar">
@@ -72,23 +38,53 @@ function Navbar() {
       </div>
 
       <div className="navbar-quora-header-2">
-          <Link to="/" className="navbar-quora-icon">
-            <HomeIcon />
-          </Link>
-          <Link to="/following" className="navbar-quora-icon">
-            <ListAltRoundedIcon />
-          </Link>
-          <Link to="/answer" className="navbar-quora-icon">
-            <AssignmentTurnedInOutlinedIcon />
-          </Link>
+        <Link
+          to="/"
+          className={`navbar-quora-icon ${
+            activeTab === "home" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("home")}
+        >
+          <HomeIcon />
+        </Link>
+        <Link
+          to="/following"
+          className={`navbar-quora-icon ${
+            activeTab === "following" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("following")}
+        >
+          <ListAltRoundedIcon />
+        </Link>
+        <Link
+          to="/answer"
+          className={`navbar-quora-icon ${
+            activeTab === "answer" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("answer")}
+        >
+          <AssignmentTurnedInOutlinedIcon />
+        </Link>
 
-          <Link to="/groups" className="navbar-quora-icon">
+        <Link
+          to="/groups"
+          className={`navbar-quora-icon ${
+            activeTab === "groups" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("groups")}
+        >
           <GroupsIcon />
-          </Link>
+        </Link>
 
-          <Link to="/notification" className="navbar-quora-icon">
+        <Link
+          to="/notification"
+          className={`navbar-quora-icon ${
+            activeTab === "notification" ? "active-tab" : ""
+          }`}
+          onClick={() => setActiveTab("notification")}
+        >
           <NotificationsNoneOutlinedIcon />
-          </Link>
+        </Link>
 
         <div className="navbar-quora-search">
           <SearchOutlinedIcon />
@@ -101,9 +97,9 @@ function Navbar() {
           <Avatar onClick={() => auth.signOut()} src={user.photo} />
         </div>
 
-          <Link to="/language" className="navbar-quora-icon">
+        <Link to="/language" className="navbar-quora-icon">
           <LanguageIcon />
-          </Link>
+        </Link>
 
         <div className="navbar-quora-question-button">
           <button
@@ -120,15 +116,6 @@ function Navbar() {
           onRequestClose={() => setIsModalOpen(false)}
           user={user}
         />
-        {/* <AddQuePostModal
-            isOpen={ismodalOpen}
-            onRequestClose={() => setIsModalOpen(false)}
-            user={user}
-            input={input}
-            setInput={setInput}
-            handleQuestion={handleQuestion}
-            handlePost={handlePost}
-          /> */}
       </div>
     </div>
   );
