@@ -16,7 +16,7 @@ function Feed() {
           posts: doc.data(),
         }));
 
-        console.log("📦 Firebase Data:", firebaseData);
+        // console.log("📦 Firebase Data:", firebaseData);
         setPosts(firebaseData);
       });
   }, []);
