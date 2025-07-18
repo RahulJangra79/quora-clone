@@ -29,8 +29,9 @@
     text-decoration: underline;
 }
 
-.post-info-detail-1>small {
-    padding-left: 10px;
+.post-follow-btn {
+    background-color: #fff;
+    border: none;
     font-weight: bold;
     color: rgb(63, 108, 255);
     cursor: pointer;

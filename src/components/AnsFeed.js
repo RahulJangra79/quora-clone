@@ -1,69 +1,68 @@
 import { useEffect, useState } from "react";
 import "../css/AnsFeed.css";
 import { ArrowDownwardOutlined, MoreHorizOutlined } from "@mui/icons-material";
-import db from "../firebase";
 import Avatar from "@mui/material/Avatar";
 import AnswerModal from "./AnsModal";
 import { useNavigate } from "react-router-dom";
+import db, { auth } from "../firebase";
+import firebase from "firebase/compat/app";
 
 function AnsFeed({ activeTab }) {
   const [questions, setQuestions] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+  const [followMap, setFollowMap] = useState({});
   const navigate = useNavigate();
-
+  const currentUser = auth.currentUser;
 
   const handleOpenModal = (id) => {
     setSelectedQuestionId(id);
     setOpenModal(true);
   };
+
   const handleCloseModal = () => setOpenModal(false);
 
-  // useEffect(() => {
-  //   const unsubscribe = db
-  //     .collection("questions")
-  //     .orderBy("timestamp", "desc")
-  //     .onSnapshot((snapshot) => {
-  //       const questionData = snapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         data: doc.data(),
-  //       }));
-  //       setQuestions(questionData);
-  //     });
+  const fetchFollowMap = async () => {
+    if (!currentUser) return;
+    const snapshot = await db
+      .collection("follows")
+      .where("followerId", "==", currentUser.uid)
+      .get();
 
-  //   return () => unsubscribe();
-  // }, []);
+    const map = {};
+    snapshot.docs.forEach((doc) => {
+      const { followeeId } = doc.data();
+      map[followeeId] = doc.id; // Store the doc ID to delete later
+    });
 
-  //   useEffect(() => {
-  //   const unsubscribe = db
-  //     .collection("questions")
-  //     .orderBy("timestamp", "desc")
-  //     .onSnapshot(async (snapshot) => {
-  //       const questionsData = await Promise.all(
-  //         snapshot.docs.map(async (doc) => {
-  //           const questionId = doc.id;
+    setFollowMap(map);
+  };
 
-  //           // Count answers for this question
-  //           const answersSnap = await db
-  //             .collection("answers")
-  //             .where("questionId", "==", questionId)
-  //             .get();
+  const handleFollowToggle = async (followeeId) => {
+    if (!currentUser || !followeeId || currentUser.uid === followeeId) return;
 
-  //           return {
-  //             id: questionId,
-  //             data: {
-  //               ...doc.data(),
-  //               answers: answersSnap.size, // count of answers
-  //             },
-  //           };
-  //         })
-  //       );
-
-  //       setQuestions(questionsData);
-  //     });
-
-  //   return () => unsubscribe();
-  // }, []);
+    try {
+      if (followMap[followeeId]) {
+        // Unfollow
+        await db.collection("follows").doc(followMap[followeeId]).delete();
+        console.log("Unfollowed");
+        const newMap = { ...followMap };
+        delete newMap[followeeId];
+        setFollowMap(newMap);
+      } else {
+        // Follow
+        const docRef = await db.collection("follows").add({
+          followerId: currentUser.uid,
+          followeeId,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        console.log("Followed");
+        setFollowMap({ ...followMap, [followeeId]: docRef.id });
+      }
+    } catch (error) {
+      console.error("Error toggling follow:", error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribeQuestions = db
@@ -74,7 +73,6 @@ function AnsFeed({ activeTab }) {
           id: doc.id,
           data: doc.data(),
         }));
-
         setQuestions(questionDocs);
       });
 
@@ -86,7 +84,6 @@ function AnsFeed({ activeTab }) {
       .collection("answers")
       .onSnapshot((snapshot) => {
         const answerCounts = {};
-
         snapshot.docs.forEach((doc) => {
           const { questionId } = doc.data();
           if (questionId) {
@@ -108,6 +105,10 @@ function AnsFeed({ activeTab }) {
     return () => unsubscribeAnswers();
   }, []);
 
+  useEffect(() => {
+    fetchFollowMap();
+  }, [questions]);
+
   return (
     <div className="ans-feed">
       <h3 className="ans-feed-header">
@@ -118,43 +119,58 @@ function AnsFeed({ activeTab }) {
           : "Drafts"}
       </h3>
 
-      {questions.map(({ id, data }) => (
-        <div key={id} className="ans-feed-question">
-          <div className="question-body">
-            <div className="question-body-user-info">
-              <Avatar src={data.user?.photo} />
-              <h5>{data.user?.display}</h5>
-            </div>
-            <p className="question-text">{data.question}</p>
+      {questions.map(({ id, data }) => {
+        const isSelf = currentUser?.uid === data.user?.uid;
+        const isFollowing = followMap[data.user?.uid];
 
-            <div className="question-meta">
-              <span className="question-answers-no"   onClick={() => navigate(`/answer/${id}`)}
->
-                {data.answers || 0} Answer{data.answers === 1 ? "" : "s"}
-              </span>
-              <span className="question-date">
-                {new Date(data.timestamp?.toDate()).toDateString()}
-              </span>
-            </div>
-
-            <div className="question-actions">
-              <div className="question-buttons">
-                <button
-                  className="answer-btn"
-                  onClick={() => handleOpenModal(id)}
-                >
-                  Answer
-                </button>
-                <button className="follow-btn">Follow</button>
+        return (
+          <div key={id} className="ans-feed-question">
+            <div className="question-body">
+              <div className="question-body-user-info">
+                <Avatar src={data.user?.photo} />
+                <h5>{data.user?.display}</h5>
               </div>
-              <div className="question-icons">
-                <ArrowDownwardOutlined />
-                <MoreHorizOutlined />
+              <p className="question-text">{data.question}</p>
+
+              <div className="question-meta">
+                <span
+                  className="question-answers-no"
+                  onClick={() => navigate(`/answer/${id}`)}
+                >
+                  {data.answers || 0} Answer{data.answers === 1 ? "" : "s"}
+                </span>
+                <span className="question-date">
+                  {new Date(data.timestamp?.toDate()).toDateString()}
+                </span>
+              </div>
+
+              <div className="question-actions">
+                <div className="question-buttons">
+                  <button
+                    className="answer-btn"
+                    onClick={() => handleOpenModal(id)}
+                  >
+                    Answer
+                  </button>
+
+                  {!isSelf && (
+                    <button
+                      className="follow-btn"
+                      onClick={() => handleFollowToggle(data.user?.uid)}
+                    >
+                      {isFollowing ? "Unfollow" : "Follow"}
+                    </button>
+                  )}
+                </div>
+                <div className="question-icons">
+                  <ArrowDownwardOutlined />
+                  <MoreHorizOutlined />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
       <AnswerModal
         open={openModal}
         handleClose={handleCloseModal}
