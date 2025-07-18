@@ -16,7 +16,6 @@ function Feed() {
           posts: doc.data(),
         }));
 
-        // console.log("📦 Firebase Data:", firebaseData);
         setPosts(firebaseData);
       });
   }, []);
@@ -28,7 +27,7 @@ function Feed() {
       {posts.map(({ id, posts }) => (
         <Post
           key={id}
-          Id={id}
+          id={id}
           post={posts.post}
           imageUrl={posts.imageUrl}
           timestamp={posts.timestamp}

@@ -46,6 +46,14 @@
     color: #666;
 }
 
+.question-answers-no{
+  cursor: pointer;
+}
+
+.question-answers-no:hover{
+  text-decoration: underline;
+}
+
 .question-actions {
     display: flex;
     justify-content: space-between;

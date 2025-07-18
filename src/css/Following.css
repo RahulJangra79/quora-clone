@@ -1,0 +1,77 @@
+.following-page {
+  padding: 40px 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.following-title {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.space-list {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.space-card {
+  display: flex;
+  align-items: flex-start;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.space-card:hover {
+  transform: translateY(-2px);
+}
+
+.space-icon {
+  font-size: 2rem;
+  margin-right: 20px;
+}
+
+.space-details {
+  flex: 1;
+}
+
+.space-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: gray;
+}
+
+.space-followers {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  color: #777;
+}
+
+.space-description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.follow-button {
+  background-color: #ffeded;
+  color: #d04e4e;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  align-self: center;
+  transition: background-color 0.3s ease;
+}
+
+.follow-button:hover {
+  background-color: #fedfdf;
+}

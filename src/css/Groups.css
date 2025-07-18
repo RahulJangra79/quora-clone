@@ -1,0 +1,107 @@
+.groups-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.groups-banner {
+  background-color: #f5f5f5;
+  padding: 30px 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.groups-banner h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.groups-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.create-space-btn,
+.discover-space-btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease;
+}
+
+.create-space-btn:hover,
+.discover-space-btn:hover {
+  background-color: #145ea8;
+}
+
+.groups-section-title {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.groups-subtitle {
+  font-size: 1rem;
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.groups-card {
+  display: flex;
+  align-items: flex-start;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.groups-icon {
+  font-size: 2rem;
+  margin-right: 20px;
+}
+
+.groups-info {
+  flex: 1;
+}
+
+.groups-title {
+  font-size: 1.2rem;
+  color: #1976d2;
+  margin-bottom: 5px;
+}
+
+.groups-description {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.follow-btn {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  align-self: center;
+  transition: background-color 0.3s ease;
+}
+
+.follow-btn:hover {
+  background-color: #145ea8;
+}

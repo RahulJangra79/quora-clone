@@ -97,9 +97,9 @@ function Navbar() {
           <Avatar onClick={() => auth.signOut()} src={user.photo} />
         </div>
 
-        <Link to="/language" className="navbar-quora-icon">
+        <div className="navbar-quora-icon">
           <LanguageIcon />
-        </Link>
+        </div>
 
         <div className="navbar-quora-question-button">
           <button
