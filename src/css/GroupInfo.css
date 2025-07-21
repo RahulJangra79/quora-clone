@@ -1,0 +1,114 @@
+.group-info-page {
+  padding: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  text-align: center;
+}
+
+.group-main {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+
+}
+
+.group-info h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.group-banner {
+  width: 100%;
+  height: auto;
+  max-height: 350px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.group-info {
+  text-align: left;
+  padding: 0 20px;
+}
+
+.group-info p {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.group-followers{
+  padding-left: 20px;
+  color: #d04e4e;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.follow-btn {
+  background-color: transparent;
+  color: #d04e4e;
+  border: 2px solid #fedfdf;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.follow-btn:hover {
+  background-color: #fedfdf;
+}
+
+.group-admin {
+  margin-top: 20px;
+  background: #fff;
+  padding: 20px;
+  text-align: left;
+  border-radius: 8px;
+}
+
+.group-admin-security {
+  font-size: 12px;
+  padding: 5px 0 10px 0;
+  color: gray;
+  border-bottom: 1px solid gray;
+}
+
+.admin-detail {
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+
+}
+
+.group-admin-name {
+  padding-left: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.group-admin-name::first-letter {
+  text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
+  .group-info-page h2 {
+    font-size: 1.5rem;
+  }
+
+  .group-info-page p {
+    font-size: 1rem;
+  }
+
+  .group-banner {
+    max-width: 100%;
+    border-radius: 6px;
+  }
+}

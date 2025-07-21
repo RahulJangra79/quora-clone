@@ -284,10 +284,6 @@
     padding: 15px 0;
   }
 
-  .login__lang {
-    flex-direction: column;
-  }
-
   .login__footer {
     flex-wrap: wrap;
     justify-content: center;

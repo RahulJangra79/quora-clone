@@ -17,7 +17,7 @@ function QuoraBox() {
   return (
     <div className="quora-box">
       <div className="quora-box-info">
-        <Avatar src={user.photo} />
+        <Avatar src={user.photo} >{user.display?.charAt(0)}</Avatar>
         <input
           type="text"
           readOnly

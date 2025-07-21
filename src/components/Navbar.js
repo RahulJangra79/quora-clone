@@ -94,7 +94,7 @@ function Navbar() {
         <button className="navbar-quora-try-quora-btn">Try Quora+</button>
 
         <div className="navbar-quora-avatar navbar-quora-icon">
-          <Avatar onClick={() => auth.signOut()} src={user.photo} />
+          <Avatar onClick={() => auth.signOut()} src={user.photo} >{user.display?.charAt(0)}</Avatar>
         </div>
 
         <div className="navbar-quora-icon">

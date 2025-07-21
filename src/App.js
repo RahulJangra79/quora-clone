@@ -12,6 +12,7 @@ import { login, logout, selectUser } from "./features/userSlice";
 import { useEffect } from "react";
 import { auth } from "./firebase";
 import AnswerPage from "./components/AnswerPage";
+import GroupInfo from "./components/GroupInfo";
 
 function App() {
   const user = useSelector(selectUser);
@@ -46,6 +47,7 @@ function App() {
               <Route path="/answer" element={<Answer />} />
               <Route path="/answer/:questionId" element={<AnswerPage />} />
               <Route path="/groups" element={<Groups />} />
+              <Route path="/groups/:groupId" element={<GroupInfo />} />
               <Route path="/notification" element={<Notification />} />
             </>
           ) : (

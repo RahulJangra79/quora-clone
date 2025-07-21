@@ -32,7 +32,7 @@ function AnsFeed({ activeTab }) {
     const map = {};
     snapshot.docs.forEach((doc) => {
       const { followeeId } = doc.data();
-      map[followeeId] = doc.id; // Store the doc ID to delete later
+      map[followeeId] = doc.id; 
     });
 
     setFollowMap(map);

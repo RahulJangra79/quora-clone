@@ -26,7 +26,6 @@ function Post({ id, post, imageUrl, timestamp, user }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followDocId, setFollowDocId] = useState(null);
 
-  // Load post data on mount
   useEffect(() => {
     const fetchPostData = async () => {
       const postRef = db.collection("posts").doc(id);
@@ -75,6 +74,9 @@ function Post({ id, post, imageUrl, timestamp, user }) {
         const docRef = await db.collection("follows").add({
           followerId: currentUser.uid,
           followeeId: user.uid,
+          followeeDisplay: user.display,
+          followeePhoto: user.photo || "",
+          followeeEmail: user.email || "",
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
         setIsFollowing(true);
@@ -175,7 +177,7 @@ function Post({ id, post, imageUrl, timestamp, user }) {
     <div className="post">
       <div className="post-info">
         <div className="post-info-avatar">
-          <Avatar src={user.photo} />
+          <Avatar src={user.photo} >{user.display?.charAt(0)}</Avatar>
         </div>
         <div className="post-info-detail">
           <div className="post-info-detail-1">

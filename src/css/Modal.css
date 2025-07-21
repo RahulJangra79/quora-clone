@@ -24,7 +24,6 @@
 
 }
 
-/* Title styles */
 .modal__title {
   display: flex;
   justify-content: space-around;
@@ -45,7 +44,6 @@
   border-bottom: 3px solid #2e69ff;
 }
 
-/* Info section */
 .modal__info {
   display: flex;
   align-items: center;
@@ -63,7 +61,6 @@
   padding: 10px;
 }
 
-/* Input and Textarea */
 .modal__Field {
   padding: 15px 20px;
   background: white;
@@ -81,12 +78,10 @@
   margin-bottom: 15px;
 }
 
-/* File input */
 .modal__fileInput {
   margin-top: 10px;
 }
 
-/* Image preview & container */
 .modal__imageContainer {
   position: relative;
   display: inline-block;
@@ -102,7 +97,6 @@
   border-radius: 5px;
 }
 
-/* Image close icon */
 .modal__imageClose {
   position: absolute;
   top: 4px;
@@ -114,7 +108,6 @@
   color: red;
 }
 
-/* Footer buttons */
 .modal__buttons {
   display: flex;
   justify-content: flex-end;
@@ -147,7 +140,6 @@
   background-color: #1c54e2;
 }
 
-/* Sticky footer section */
 .sticky-footer {
   position: sticky;
   bottom: 0;

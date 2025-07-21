@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../css/AnsModal.css";
 import db from "../firebase";
 import Modal from "@mui/material/Modal";
