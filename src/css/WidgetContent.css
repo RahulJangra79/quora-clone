@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  height: auto;
 }
 
 .widget__content {
@@ -11,8 +12,9 @@
   border-bottom: 1px solid lightgray;
 }
 
-.widget__content > img {
-  height: 30px;
+.widget__content>img {
+  height: 35px !important;
+  width: 45px !important;
   border-radius: 5px;
 }
 
@@ -20,13 +22,25 @@
   margin-left: 10px;
 }
 
-.widget__contentTitle > h5 {
+.widget__contentTitle>h5 {
   margin: 0;
   color: rgb(70, 68, 68);
 }
 
-.widget__contentTitle > p {
+.widget__contentTitle>p {
   color: gray;
   font-size: small;
   margin: 0;
+}
+
+.widgets__view__more__btn {
+  background-color: transparent;
+  border: none;
+  padding-top: 10px;
+}
+
+.widgets__view__more {
+  text-decoration: none;
+  font-size: 16px;
+  color: gray;
 }

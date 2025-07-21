@@ -1,70 +1,49 @@
 import React from "react";
 import "../css/WidgetContent.css";
-import image from '../images/science.jpeg';
+import { useEffect, useState } from "react";
+import db from "../firebase";
+import { Link, useNavigate } from "react-router-dom";
 
 function WidgetContent() {
+  const [spaces, setSpaces] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = db
+      .collection("spaces")
+      .orderBy("createdAt", "desc")
+      .limit(9)
+      .onSnapshot((snapshot) => {
+        const fetchedSpaces = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setSpaces(fetchedSpaces);
+      });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="widget__contents">
-      <div className="widget__content">
-        <img
-          src={image}
-          alt=""
-        />
-        <div className="widget__contentTitle">
-          <h5>Mobile App Programmer</h5>
-          <p>The best Mobile App Development Company</p>
+      {spaces.map((space) => (
+        <div
+          key={space.id}
+          className="widget__content"
+          onClick={() => navigate(`/groups/${space.id}`)}
+        >
+          <img src={space.imageUrl} alt={space.title} />
+          <div className="widget__contentTitle">
+            <h5>{space.title}</h5>
+            <p>{space.description?.slice(0, 50) || "No description..."}</p>
+          </div>
         </div>
-      </div>
-      <div className="widget__content">
-        <img
-          src={image}
-          alt=""
-        />
-        <div className="widget__contentTitle">
-          <h5>Quota of Quotes</h5>
-          <p>Daily dosage of unforgettable lines from ...</p>
-        </div>
-      </div>
-      <div className="widget__content">
-        <img
-          src={image}
-          alt=""
-        />
-        <div className="widget__contentTitle">
-          <h5>Art & Artist</h5>
-          <p>A Space retated to creating, practicing an...</p>
-        </div>
-      </div>
-      <div className="widget__content">
-        <img
-          src={image}
-          alt=""
-        />
-        <div className="widget__contentTitle">
-          <h5>Friedrich Nietzche</h5>
-          <p>A Space dedicated to great work of Friedrich...</p>
-        </div>
-      </div>
-      <div className="widget__content">
-        <img
-          src={image}
-          alt=""
-        />
-        <div className="widget__contentTitle">
-          <h5>Stock Market Strategies</h5>
-          <p>Everything about investing in Stock...</p>
-        </div>
-      </div>
-      <div className="widget__content">
-        <img
-          src={image}
-          alt=""
-        />
-        <div className="widget__contentTitle">
-          <h5>Architecture World</h5>
-          <p>All about civil architecture...</p>
-        </div>
-      </div>
+      ))}
+      <button className="widgets__view__more__btn">
+        <Link to="/groups" className="widgets__view__more">
+          View More{" "}
+        </Link>
+      </button>
     </div>
   );
 }

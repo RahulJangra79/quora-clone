@@ -1,55 +1,82 @@
-import React from "react";
 import "../css/SidebarOptions.css";
-import historyImg from "../images/history.png";
-import educationImg from "../images/education.jpg";
-import businessImg from "../images/business.jpeg";
-import cookingImg from "../images/cooking.jpeg";
-import foodImg from "../images/food.jpg";
-import musicImg from "../images/music.jpeg";
-import scienceImg from "../images/science.jpeg";
+import { useEffect, useState } from "react";
+import db from "../firebase";
 import { Add } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import CreateSpaceModal from "./CreateSpaceModal";
 
 function SidebarOptions() {
+  const [singleWordSpaces, setSingleWordSpaces] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const unsubscribe = db
+  //     .collection("spaces")
+  //     .orderBy("createdAt", "desc")
+  //     .limit(20)
+  //     .onSnapshot((snapshot) => {
+  //       const filtered = snapshot.docs
+  //         .map((doc) => ({ id: doc.id, ...doc.data() }))
+  //         .filter(
+  //           (space) =>
+  //             space.title &&
+  //             typeof space.title === "string" &&
+  //             space.title.trim().split(/\s+/).length === 1
+  //         );
+  //       setSingleWordSpaces(filtered);
+  //     });
+
+  //   return () => unsubscribe();
+  // }, []);
+
+  useEffect(() => {
+    const unsubscribe = db
+      .collection("spaces")
+      .orderBy("createdAt", "desc")
+      .limit(25) // fetch more for buffer
+      .onSnapshot((snapshot) => {
+        const filtered = snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .filter(
+            (space) =>
+              space.title &&
+              typeof space.title === "string" &&
+              space.title.trim().split(/\s+/).length === 1
+          )
+          .slice(0, 7); // take first 7 matching single-word titles
+
+        setSingleWordSpaces(filtered);
+      });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="sidebar-options">
       <div className="sidebar-option">
         <Add />
-        <p>Create Space</p>
-      </div>
-      <div className="sidebar-option">
-        <img src={historyImg} alt="" />
-        <p>History</p>
-      </div>
-
-      <div className="sidebar-option">
-        <img src={educationImg} alt="" />
-        <p>Education</p>
+        <button
+          className="sidebar-create-space-btn"
+          onClick={() => setShowModal(true)}
+        >
+          Create Space
+        </button>
       </div>
 
-      <div className="sidebar-option">
-        <img src={businessImg} alt="" />
-        <p>Business</p>
-      </div>
+      {singleWordSpaces.map((space) => (
+        <div
+          key={space.id}
+          className="sidebar-option"
+          onClick={() => navigate(`/groups/${space.id}`)}
+        >
+          <img src={space.imageUrl} alt={space.title} />
+          <p>{space.title}</p>
+        </div>
+      ))}
 
-      <div className="sidebar-option">
-        <img src={cookingImg} alt="" />
-        <p>Cooking</p>
-      </div>
-
-      <div className="sidebar-option">
-        <img src={musicImg} alt="" />
-        <p>Music</p>
-      </div>
-
-      <div className="sidebar-option">
-        <img src={scienceImg} alt="" />
-        <p>Science</p>
-      </div>
-
-      <div className="sidebar-option">
-        <img src={foodImg} alt="" />
-        <p>Food</p>
-      </div>
+      {showModal && <CreateSpaceModal closeModal={() => setShowModal(false)} />}
     </div>
   );
 }

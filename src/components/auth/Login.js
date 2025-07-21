@@ -69,14 +69,6 @@ function Login() {
               />
               <p onClick={signIn}>Continue With Google</p>
             </div>
-            <div className="login__authOption">
-              <img
-                className="login__googleAuth"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiXN9xSEe8unzPBEQOeAKXd9Q55efGHGB9BA&s"
-                alt=""
-              />
-              <p>Continue With Facebook</p>
-            </div>
           </div>
           <div className="login__emailPass">
             <div className="login__label">
