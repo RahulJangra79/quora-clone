@@ -10,13 +10,14 @@ import {
 import db from "../firebase";
 import { getAuth } from "firebase/auth";
 import firebase from "firebase/compat/app";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function Post({ id, post, imageUrl, timestamp, user }) {
   const auth = getAuth();
   const currentUser = auth.currentUser;
-
+  const navigate = useNavigate();
   const [upvoteCount, setUpvoteCount] = useState(0);
   const [shareCount, setShareCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
@@ -26,6 +27,20 @@ function Post({ id, post, imageUrl, timestamp, user }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followDocId, setFollowDocId] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -233,7 +248,12 @@ function Post({ id, post, imageUrl, timestamp, user }) {
         </div>
         <div className="post-info-detail">
           <div className="post-info-detail-1">
-            <h5>{user.display}</h5>
+            <h5
+              onClick={() => navigate(`/user/${user.uid}`)}
+              style={{ cursor: "pointer" }}
+            >
+              {user.display}
+            </h5>
             {currentUser?.uid !== user.uid && (
               <button className="post-follow-btn" onClick={handleToggleFollow}>
                 {isFollowing ? "Unfollow" : "Follow"}
@@ -293,7 +313,7 @@ function Post({ id, post, imageUrl, timestamp, user }) {
             style={{ cursor: "pointer" }}
           />
           {showDropdown && (
-            <div className="post-dropdown">
+            <div className="post-dropdown" ref={dropdownRef}>
               <p onClick={handleBookmark}>Bookmark</p>
               <p onClick={handleCopyLink}>Copy link</p>
               <p onClick={handleNotInterested}>Not interested in this</p>

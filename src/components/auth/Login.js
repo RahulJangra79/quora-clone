@@ -3,6 +3,7 @@ import "./Login.css";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import db, { auth, provider } from "../../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import firebase from "firebase/compat/app";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -24,6 +25,9 @@ function Login() {
           address: "",
           isQuoraPlus: false,
           uid: user.uid,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          photo: user.photoURL || "",
+          language: user.language || "",
         };
         await setDoc(userRef, userData);
       }

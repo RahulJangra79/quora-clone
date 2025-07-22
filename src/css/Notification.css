@@ -1,35 +1,39 @@
 .notification-page {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 0 20px;
-  font-family: 'Segoe UI', sans-serif;
-  height: 100vh;
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .notification-title {
-  font-size: 1.6rem;
-  margin-bottom: 30px;
-  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.notification-empty {
+  color: #999;
+  text-align: center;
+  margin-top: 40px;
 }
 
 .notification-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
 .notification-card {
   display: flex;
   align-items: center;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid #eee;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  padding: 12px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
 }
 
 .notification-avatar {
-  margin-right: 15px;
+  margin-right: 12px;
 }
 
 .notification-content {
@@ -37,12 +41,11 @@
 }
 
 .notification-message {
-  font-size: 1rem;
+  font-size: 16px;
   margin: 0;
-  color: #222;
 }
 
 .notification-time {
-  font-size: 0.85rem;
-  color: #777;
+  font-size: 12px;
+  color: #888;
 }

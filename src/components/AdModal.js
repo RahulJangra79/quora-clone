@@ -17,7 +17,7 @@ function AdModal() {
   const [isQuoraPlusModalOpen, setIsQuoraPlusModalOpen] = useState(false);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const [showCloseButton, setShowCloseButton] = useState(false);
-  const delays = [60000, 120000]; // 2min, 4min (in ms)
+  const delays = [120000, 240000];
   const [cycleIndex, setCycleIndex] = useState(0);
 
   const adQueue = [

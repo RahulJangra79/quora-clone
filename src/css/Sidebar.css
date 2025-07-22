@@ -1,10 +1,12 @@
 .sidebar {
-    flex: 0.1;
+  width: 160px;
+  margin-left: 20px;
 }
 
 .sidebar_bottom {
   display: flex;
   flex-wrap: wrap;
+  padding: 10px;
 }
 
 .sidebar_bottom > a{

@@ -27,12 +27,92 @@ function Navbar() {
   const [isQuoraPlusModalOpen, setIsQuoraPlusModalOpen] = useState(false);
   const [showLangList, setShowLangList] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState({
+    questions: [],
+    answers: [],
+    spaces: [],
+    users: [],
+    posts: [],
+  });
   const dropdownRef = useRef(null);
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const avatarDropdownRef = useRef(null);
   const [isQuoraPlusUser, setIsQuoraPlusUser] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showTranslator, setShowTranslator] = useState(false);
+
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setSearchResults({
+        questions: [],
+        answers: [],
+        spaces: [],
+        users: [],
+        posts: [],
+      });
+      return;
+    }
+
+    const runSearch = async () => {
+      try {
+        const lowerTerm = searchTerm.toLowerCase();
+
+        const [questionsSnap, answersSnap, spacesSnap, usersSnap, postsSnap] =
+          await Promise.all([
+            db
+              .collection("questions")
+              .where("keywords", "array-contains", lowerTerm)
+              .limit(5)
+              .get(),
+
+            db
+              .collection("answers")
+              .where("keywords", "array-contains", lowerTerm)
+              .limit(5)
+              .get(),
+
+            db
+              .collection("spaces")
+              .where("title", ">=", lowerTerm)
+              .where("title", "<=", lowerTerm + "\uf8ff")
+              .limit(5)
+              .get(),
+
+            db
+              .collection("users")
+              .where("name", ">=", lowerTerm)
+              .where("name", "<=", lowerTerm + "\uf8ff")
+              .limit(5)
+              .get(),
+
+            db
+              .collection("posts")
+              .where("keywords", "array-contains", lowerTerm)
+              .limit(5)
+              .get(),
+          ]);
+
+        setSearchResults({
+          questions: questionsSnap.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })),
+          answers: answersSnap.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          })),
+          spaces: spacesSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+          users: usersSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+          posts: postsSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+        });
+      } catch (error) {
+        console.error("Error during search:", error);
+      }
+    };
+
+    runSearch();
+  }, [searchTerm]);
 
   useEffect(() => {
     if (showTranslator) {
@@ -179,8 +259,38 @@ function Navbar() {
 
         <div className="navbar-quora-search">
           <SearchOutlinedIcon />
-          <input type="text" placeholder="Search Quora" />
+          <input
+            type="text"
+            placeholder="Search Quora"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
+        {searchTerm && (
+          <div className="search-overlay">
+            <div className="search-results-box">
+              {searchResults.questions.map((q) => (
+                <p key={q.id}>🟦 Question: {q.question}</p>
+              ))}
+
+              {searchResults.answers.map((a) => (
+                <p key={a.id}>🟨 Answer: {a.answer}</p>
+              ))}
+
+              {searchResults.spaces.map((s) => (
+                <p key={s.id}>🟪 Space: {s.title}</p>
+              ))}
+
+              {searchResults.users.map((u) => (
+                <p key={u.uid}>🟧 User: {u.name}</p>
+              ))}
+
+              {searchResults.posts.map((p) => (
+                <p key={p.id}>🟥 Post: {p.text || p.post}</p>
+              ))}
+            </div>
+          </div>
+        )}
 
         {!isQuoraPlusUser ? (
           <button
@@ -212,10 +322,24 @@ function Navbar() {
               <p className="dropdown-user-name">{user?.display}</p>
               <hr />
               <ul className="avatar-dropdown-list">
-                <li>Messages</li>
-                <li>Monetization</li>
-                <li>Your content & stats</li>
-                <li>Bookmarks</li>
+                <li>
+                  <Link
+                    className="avatar-dropdown-link"
+                    to={`/user/${user?.uid}`}
+                  >
+                    Your Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link className="avatar-dropdown-link" to="/content">
+                    Your Content
+                  </Link>
+                </li>
+                <li>
+                  <Link className="avatar-dropdown-link" to="/bookmarks">
+                    Bookmarks
+                  </Link>
+                </li>
                 {!isQuoraPlusUser ? (
                   <li onClick={() => setIsQuoraPlusModalOpen(true)}>
                     Try Quora+
@@ -223,7 +347,6 @@ function Navbar() {
                 ) : (
                   <li onClick={() => setShowStatusModal(true)}>Quora+</li>
                 )}
-                <li>Settings</li>
                 <li
                   onClick={() => setShowLangList((prev) => !prev)}
                   style={{ cursor: "pointer" }}
@@ -258,8 +381,11 @@ function Navbar() {
                     </ul>
                   )}
                 </li>
-
-                <li>Help</li>
+                <li>
+                  <Link className="avatar-dropdown-link" to="/help">
+                    Help
+                  </Link>
+                </li>{" "}
                 <li onClick={() => auth.signOut()} className="logout">
                   Logout
                 </li>

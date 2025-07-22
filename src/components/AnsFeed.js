@@ -1,19 +1,95 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../css/AnsFeed.css";
-import { ArrowDownwardOutlined, MoreHorizOutlined } from "@mui/icons-material";
+import { MoreHorizOutlined } from "@mui/icons-material";
 import Avatar from "@mui/material/Avatar";
 import AnswerModal from "./AnsModal";
 import { useNavigate } from "react-router-dom";
 import db, { auth } from "../firebase";
 import firebase from "firebase/compat/app";
+import Swal from "sweetalert2";
 
 function AnsFeed({ activeTab }) {
   const [questions, setQuestions] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedQuestionId, setSelectedQuestionId] = useState(null);
   const [followMap, setFollowMap] = useState({});
+  const [activeDropdownId, setActiveDropdownId] = useState(null);
   const navigate = useNavigate();
   const currentUser = auth.currentUser;
+  const dropdownRef = useRef(null);
+  const [hiddenQuestions, setHiddenQuestions] = useState([]);
+
+  useEffect(() => {
+    const fetchHiddenQuestions = async () => {
+      if (!currentUser) return;
+      const userDoc = await db.collection("users").doc(currentUser.uid).get();
+      const userData = userDoc.data();
+      if (userData?.hiddenQuestions) {
+        setHiddenQuestions(userData.hiddenQuestions);
+      }
+    };
+
+    fetchHiddenQuestions();
+  }, [currentUser]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setActiveDropdownId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleBookmark = async (id) => {
+    if (!currentUser) return;
+    await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .set(
+        {
+          bookmarks: firebase.firestore.FieldValue.arrayUnion(id),
+        },
+        { merge: true }
+      );
+
+    Swal.fire("Bookmarked!", "Saved for later.", "success");
+    setActiveDropdownId(null);
+  };
+
+  const handleCopyLink = (id) => {
+    const link = `${window.location.origin}/post/${id}`;
+    navigator.clipboard.writeText(link);
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "Link copied!",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+    });
+    setActiveDropdownId(null);
+  };
+
+  const handleNotInterested = async (questionId) => {
+    if (!currentUser) return;
+
+    await db
+      .collection("users")
+      .doc(currentUser.uid)
+      .set(
+        {
+          hiddenQuestions: firebase.firestore.FieldValue.arrayUnion(questionId),
+        },
+        { merge: true }
+      );
+
+    setHiddenQuestions((prev) => [...prev, questionId]); // update local state
+    Swal.fire("Got it!", "This question will be hidden.", "info");
+    setActiveDropdownId(null);
+  };
 
   const handleOpenModal = (id) => {
     setSelectedQuestionId(id);
@@ -32,77 +108,61 @@ function AnsFeed({ activeTab }) {
     const map = {};
     snapshot.docs.forEach((doc) => {
       const { followeeId } = doc.data();
-      map[followeeId] = doc.id; 
+      map[followeeId] = doc.id;
     });
-
     setFollowMap(map);
   };
 
   const handleFollowToggle = async (followeeId) => {
-    if (!currentUser || !followeeId || currentUser.uid === followeeId) return;
-
+    if (!currentUser || currentUser.uid === followeeId) return;
     try {
       if (followMap[followeeId]) {
-        // Unfollow
         await db.collection("follows").doc(followMap[followeeId]).delete();
-        console.log("Unfollowed");
-        const newMap = { ...followMap };
-        delete newMap[followeeId];
-        setFollowMap(newMap);
+        const updated = { ...followMap };
+        delete updated[followeeId];
+        setFollowMap(updated);
       } else {
-        // Follow
         const docRef = await db.collection("follows").add({
           followerId: currentUser.uid,
           followeeId,
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
-        console.log("Followed");
         setFollowMap({ ...followMap, [followeeId]: docRef.id });
       }
-    } catch (error) {
-      console.error("Error toggling follow:", error);
+    } catch (err) {
+      console.error("Follow toggle failed:", err);
     }
   };
 
   useEffect(() => {
-    const unsubscribeQuestions = db
+    const unsubQ = db
       .collection("questions")
       .orderBy("timestamp", "desc")
-      .onSnapshot((snapshot) => {
-        const questionDocs = snapshot.docs.map((doc) => ({
+      .onSnapshot((snap) => {
+        const docs = snap.docs.map((doc) => ({
           id: doc.id,
           data: doc.data(),
         }));
-        setQuestions(questionDocs);
+        setQuestions(docs);
       });
-
-    return () => unsubscribeQuestions();
+    return () => unsubQ();
   }, []);
 
   useEffect(() => {
-    const unsubscribeAnswers = db
-      .collection("answers")
-      .onSnapshot((snapshot) => {
-        const answerCounts = {};
-        snapshot.docs.forEach((doc) => {
-          const { questionId } = doc.data();
-          if (questionId) {
-            answerCounts[questionId] = (answerCounts[questionId] || 0) + 1;
-          }
-        });
-
-        setQuestions((prevQuestions) =>
-          prevQuestions.map((q) => ({
-            ...q,
-            data: {
-              ...q.data,
-              answers: answerCounts[q.id] || 0,
-            },
-          }))
-        );
+    const unsubA = db.collection("answers").onSnapshot((snap) => {
+      const counts = {};
+      snap.docs.forEach((doc) => {
+        const qId = doc.data().questionId;
+        counts[qId] = (counts[qId] || 0) + 1;
       });
-
-    return () => unsubscribeAnswers();
+      setQuestions((prev) =>
+        prev.map((q) => ({
+          ...q,
+          data: { ...q.data, answers: counts[q.id] || 0 },
+        }))
+      );
+    });
+    return () => unsubA();
   }, []);
 
   useEffect(() => {
@@ -119,58 +179,81 @@ function AnsFeed({ activeTab }) {
           : "Drafts"}
       </h3>
 
-      {questions.map(({ id, data }) => {
-        const isSelf = currentUser?.uid === data.user?.uid;
-        const isFollowing = followMap[data.user?.uid];
+      {questions
+        .filter(({ id }) => !hiddenQuestions.includes(id))
+        .map(({ id, data }) => {
+          const isSelf = currentUser?.uid === data.user?.uid;
+          const isFollowing = followMap[data.user?.uid];
 
-        return (
-          <div key={id} className="ans-feed-question">
-            <div className="question-body">
-              <div className="question-body-user-info">
-                <Avatar src={data.user?.photo} />
-                <h5>{data.user?.display}</h5>
-              </div>
-              <p className="question-text">{data.question}</p>
-
-              <div className="question-meta">
-                <span
-                  className="question-answers-no"
-                  onClick={() => navigate(`/answer/${id}`)}
-                >
-                  {data.answers || 0} Answer{data.answers === 1 ? "" : "s"}
-                </span>
-                <span className="question-date">
-                  {new Date(data.timestamp?.toDate()).toDateString()}
-                </span>
-              </div>
-
-              <div className="question-actions">
-                <div className="question-buttons">
-                  <button
-                    className="answer-btn"
-                    onClick={() => handleOpenModal(id)}
+          return (
+            <div key={id} className="ans-feed-question">
+              <div className="question-body">
+                <div className="question-body-user-info">
+                  <Avatar src={data.user?.photo} />
+                  <h5
+                    onClick={() => navigate(`/user/${data.user.uid}`)}
+                    style={{ cursor: "pointer" }}
                   >
-                    Answer
-                  </button>
-
-                  {!isSelf && (
-                    <button
-                      className="follow-btn"
-                      onClick={() => handleFollowToggle(data.user?.uid)}
-                    >
-                      {isFollowing ? "Unfollow" : "Follow"}
-                    </button>
-                  )}
+                    {data.user?.display}
+                  </h5>
                 </div>
-                <div className="question-icons">
-                  <ArrowDownwardOutlined />
-                  <MoreHorizOutlined />
+
+                <p className="question-text">{data.question}</p>
+
+                <div className="question-meta">
+                  <span
+                    className="question-answers-no"
+                    onClick={() => navigate(`/answer/${id}`)}
+                  >
+                    {data.answers || 0} Answer{data.answers === 1 ? "" : "s"}
+                  </span>
+                  <span className="question-date">
+                    {new Date(data.timestamp?.toDate()).toDateString()}
+                  </span>
+                </div>
+
+                <div className="question-actions">
+                  <div className="question-buttons">
+                    <button
+                      className="answer-btn"
+                      onClick={() => handleOpenModal(id)}
+                    >
+                      Answer
+                    </button>
+                    {!isSelf && (
+                      <button
+                        className="follow-btn"
+                        onClick={() => handleFollowToggle(data.user?.uid)}
+                      >
+                        {isFollowing ? "Unfollow" : "Follow"}
+                      </button>
+                    )}
+                  </div>
+                  <div
+                    className="question-icons"
+                    style={{ position: "relative" }}
+                  >
+                    <MoreHorizOutlined
+                      onClick={() =>
+                        setActiveDropdownId((prev) => (prev === id ? null : id))
+                      }
+                      style={{ cursor: "pointer" }}
+                    />
+                    {activeDropdownId === id && (
+                      <div className="post-dropdown" ref={dropdownRef}>
+                        <p onClick={() => handleBookmark(id)}>Bookmark</p>
+                        <p onClick={() => handleCopyLink(id)}>Copy link</p>
+                        <p onClick={() => handleNotInterested(id)}>
+                          Not interested
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
       <AnswerModal
         open={openModal}
         handleClose={handleCloseModal}

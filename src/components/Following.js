@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import db from "../firebase";
 import { getAuth } from "firebase/auth";
 import Avatar from "@mui/material/Avatar";
+import { useNavigate } from "react-router-dom";
 
 function Following() {
   const auth = getAuth();
@@ -10,6 +11,7 @@ function Following() {
   const [followedGroups, setFollowedGroups] = useState([]);
   const [followedUsers, setFollowedUsers] = useState([]);
   const [followsMap, setFollowsMap] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser) return;
@@ -102,7 +104,12 @@ function Following() {
             <div key={user.id} className="user-card">
               <Avatar src={user.photoURL}>{user.displayName?.charAt(0)}</Avatar>
               <div className="user-info">
-                <h4>{user.displayName}</h4>
+                <h4
+                  onClick={() => navigate(`/user/${user.id}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {user?.displayName}
+                </h4>
               </div>
               <button
                 className="follow-button"
@@ -130,7 +137,13 @@ function Following() {
                 )}
               </div>
               <div className="space-details">
-                <h3 className="space-title">{group.title}</h3>
+                <h3
+                className="space-title"
+                  onClick={() => navigate(`/group/${group.id}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {group.title}
+                </h3>
                 <p className="space-description">{group.description}</p>
               </div>
               <button

@@ -11,6 +11,7 @@ function CreateSpaceModal({ closeModal, refreshSpaces }) {
     category: "",
   });
   const [spaceImage, setSpaceImage] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
   const modalRef = useRef(null);
   const auth = getAuth();
   const currentUser = auth.currentUser;
@@ -30,6 +31,7 @@ function CreateSpaceModal({ closeModal, refreshSpaces }) {
 
   const handleCreate = async () => {
     if (!newSpace.title.trim()) return;
+    setIsCreating(true);
 
     try {
       let imageUrl = "";
@@ -61,6 +63,7 @@ function CreateSpaceModal({ closeModal, refreshSpaces }) {
           name: currentUser.displayName,
           photo: currentUser.photoURL,
           email: currentUser.email,
+          uid: currentUser.uid,
         },
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       });
@@ -69,6 +72,8 @@ function CreateSpaceModal({ closeModal, refreshSpaces }) {
       refreshSpaces?.();
     } catch (error) {
       console.error("Error creating space:", error);
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -117,7 +122,9 @@ function CreateSpaceModal({ closeModal, refreshSpaces }) {
         </select>
 
         <div className="modal-actions">
-          <button onClick={handleCreate}>Create</button>
+          <button onClick={handleCreate} disabled={isCreating}>
+            {isCreating ? "Creating..." : "Create"}
+          </button>{" "}
           <button onClick={closeModal}>Cancel</button>
         </div>
       </div>

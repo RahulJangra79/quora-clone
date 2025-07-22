@@ -7,20 +7,25 @@ import { Close } from "@mui/icons-material";
 import db from "../firebase";
 import firebase from "firebase/compat/app";
 
-const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dmjuvhepw/image/upload";
+const CLOUDINARY_UPLOAD_URL =
+  "https://api.cloudinary.com/v1_1/dmjuvhepw/image/upload";
 const CLOUDINARY_UPLOAD_PRESET = "quora-clone";
 
-const AddQuePostModal = ({ isOpen, onRequestClose, user, activeTab: initialTab  }) => {
+const AddQuePostModal = ({
+  isOpen,
+  onRequestClose,
+  user,
+  activeTab: initialTab,
+}) => {
   const [activeTab, setActiveTab] = useState("question");
   const [input, setInput] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(0);
 
-    useEffect(() => {
+  useEffect(() => {
     setActiveTab(initialTab);
   }, [initialTab]);
-
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -66,11 +71,12 @@ const AddQuePostModal = ({ isOpen, onRequestClose, user, activeTab: initialTab  
 
   const handleQuestion = async () => {
     if (!input.trim()) return;
-
+    const keywords = input.toLowerCase().split(/\s+/);
     try {
       await db.collection("questions").add({
         user,
         question: input,
+        keywords,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
       setInput("");
@@ -82,12 +88,13 @@ const AddQuePostModal = ({ isOpen, onRequestClose, user, activeTab: initialTab  
   const handlePost = async () => {
     if (!input.trim()) return;
     const imageUrl = await uploadToCloudinary();
-
+    const keywords = input.toLowerCase().split(/\s+/);
     try {
       await db.collection("posts").add({
         user,
         post: input,
         imageUrl: imageUrl || "",
+        keywords,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
       setInput("");
@@ -119,10 +126,16 @@ const AddQuePostModal = ({ isOpen, onRequestClose, user, activeTab: initialTab  
       ariaHideApp={false}
     >
       <div className="modal__title">
-        <h5 className={activeTab === "question" ? "active-tab" : ""} onClick={() => setActiveTab("question")}>
+        <h5
+          className={activeTab === "question" ? "active-tab" : ""}
+          onClick={() => setActiveTab("question")}
+        >
           Add Question
         </h5>
-        <h5 className={activeTab === "post" ? "active-tab" : ""} onClick={() => setActiveTab("post")}>
+        <h5
+          className={activeTab === "post" ? "active-tab" : ""}
+          onClick={() => setActiveTab("post")}
+        >
           Add Post
         </h5>
       </div>
