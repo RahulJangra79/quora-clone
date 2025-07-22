@@ -25,6 +25,7 @@ function Post({ id, post, imageUrl, timestamp, user }) {
   const [comments, setComments] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followDocId, setFollowDocId] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -61,6 +62,57 @@ function Post({ id, post, imageUrl, timestamp, user }) {
 
     fetchFollowStatus();
   }, [user?.uid, currentUser]);
+
+  const handleBookmark = async () => {
+    if (!currentUser) return;
+
+    const userRef = db.collection("users").doc(currentUser.uid);
+    await userRef.set(
+      {
+        bookmarks: firebase.firestore.FieldValue.arrayUnion(id),
+      },
+      { merge: true }
+    );
+
+    Swal.fire(
+      "Bookmarked!",
+      "You can find it later in your saved posts.",
+      "success"
+    );
+    setShowDropdown(false);
+  };
+
+  const handleCopyLink = () => {
+    const link = `${window.location.origin}/post/${id}`;
+    navigator.clipboard.writeText(link);
+
+    Swal.fire({
+      toast: true,
+      position: "top-end",
+      icon: "success",
+      title: "Link copied!",
+      showConfirmButton: false,
+      timer: 1500,
+      timerProgressBar: true,
+    });
+
+    setShowDropdown(false);
+  };
+
+  const handleNotInterested = async () => {
+    if (!currentUser) return;
+
+    const userRef = db.collection("users").doc(currentUser.uid);
+    await userRef.set(
+      {
+        hiddenPosts: firebase.firestore.FieldValue.arrayUnion(id),
+      },
+      { merge: true }
+    );
+
+    Swal.fire("Got it!", "This post will no longer appear.", "info");
+    setShowDropdown(false);
+  };
 
   const handleToggleFollow = async () => {
     if (!currentUser || currentUser.uid === user?.uid) return;
@@ -177,7 +229,7 @@ function Post({ id, post, imageUrl, timestamp, user }) {
     <div className="post">
       <div className="post-info">
         <div className="post-info-avatar">
-          <Avatar src={user.photo} >{user.display?.charAt(0)}</Avatar>
+          <Avatar src={user.photo}>{user.display?.charAt(0)}</Avatar>
         </div>
         <div className="post-info-detail">
           <div className="post-info-detail-1">
@@ -235,8 +287,18 @@ function Post({ id, post, imageUrl, timestamp, user }) {
           </div>
         </div>
 
-        <div className="post-footer-right">
-          <MoreHorizOutlined />
+        <div className="post-footer-right" style={{ position: "relative" }}>
+          <MoreHorizOutlined
+            onClick={() => setShowDropdown((prev) => !prev)}
+            style={{ cursor: "pointer" }}
+          />
+          {showDropdown && (
+            <div className="post-dropdown">
+              <p onClick={handleBookmark}>Bookmark</p>
+              <p onClick={handleCopyLink}>Copy link</p>
+              <p onClick={handleNotInterested}>Not interested in this</p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Avatar from "@mui/material/Avatar";
-import "../css/Modal.css";
+import "../css/AddQuePostModal.css";
 import imageCompression from "browser-image-compression";
 import { Close } from "@mui/icons-material";
 import db from "../firebase";

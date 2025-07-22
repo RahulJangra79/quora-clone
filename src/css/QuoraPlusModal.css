@@ -1,0 +1,129 @@
+.quora-plus-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.quora-plus-modal {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 420px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  position: relative;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.modal-title {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #1a1a1a;
+}
+
+.description {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.plan-options {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.plan {
+  flex: 1;
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.plan.selected {
+  border-color: #2e69ff;
+  background: #eef3ff;
+}
+
+.subscribe-btn {
+  background-color: #2e69ff;
+  color: #fff;
+  padding: 12px;
+  width: 100%;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.trial-text {
+  font-size: 13px;
+  color: #444;
+  margin-bottom: 12px;
+}
+
+.total-price {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+}
+
+.payment-title {
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.payment-method {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.payment-method.active {
+  border-color: #2e69ff;
+  background-color: #eef3ff;
+}
+
+.terms {
+  font-size: 11px;
+  color: #666;
+  margin-top: 12px;
+}
+
+.terms a {
+  color: #2e69ff;
+  text-decoration: none;
+}
+
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+}

@@ -1,0 +1,65 @@
+.ad-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ad-modal {
+  background: white;
+  padding: 20px;
+  max-width: 500px;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.5s ease;
+  margin: 10px;
+}
+
+.ad-img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.ad-text h3 {
+  margin-bottom: 8px;
+}
+
+.ad-text p {
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.ad-text button {
+  background-color: #2e69ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ad-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: transparent;
+  font-size: 22px;
+  border: none;
+  cursor: pointer;
+  color: #888;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

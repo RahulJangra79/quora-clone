@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { auth } from "./firebase";
 import AnswerPage from "./components/AnswerPage";
 import GroupInfo from "./components/GroupInfo";
+import AdModal from "./components/AdModal";
 
 function App() {
   const user = useSelector(selectUser);
@@ -39,6 +40,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         {user && <Navbar />}
+        {user && <AdModal />}
         <Routes>
           {user ? (
             <>

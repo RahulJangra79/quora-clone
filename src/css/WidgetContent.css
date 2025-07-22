@@ -6,10 +6,14 @@
 }
 
 .widget__content {
-  margin: 5px;
   display: flex;
-  padding: 5px;
+  padding: 10px;
   border-bottom: 1px solid lightgray;
+}
+
+.widget__content:hover{
+  background-color: #eee;
+  border-radius: 8px;
 }
 
 .widget__content>img {

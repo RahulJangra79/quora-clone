@@ -1,41 +1,91 @@
 import { useState } from "react";
 import "./Login.css";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { auth, provider } from "../../firebase";
+import db, { auth, provider } from "../../firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signIn = () => {
-    auth.signInWithPopup(provider).catch((e) => {
+  const signIn = async () => {
+    try {
+      const result = await auth.signInWithPopup(provider);
+      const user = result.user;
+
+      const userRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userRef);
+
+      if (!docSnap.exists()) {
+        const userData = {
+          name: user.displayName || "",
+          email: user.email,
+          contact: "",
+          address: "",
+          isQuoraPlus: false,
+          uid: user.uid,
+        };
+        await setDoc(userRef, userData);
+      }
+    } catch (e) {
       alert(e.message);
-    });
+    }
   };
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
 
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        console.log(auth);
-      })
-      .catch((e) => alert(e.message));
+    try {
+      const authResult = await auth.signInWithEmailAndPassword(email, password);
+      const user = authResult.user;
+
+      const userRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userRef);
+
+      if (!docSnap.exists()) {
+        const userData = {
+          name: user.displayName || "",
+          email: user.email,
+          contact: "",
+          address: "",
+          isQuoraPlus: false,
+          uid: user.uid,
+        };
+
+        await setDoc(userRef, userData);
+        console.log("User document created on login:", userData);
+      } else {
+        console.log("User already exists:", docSnap.data());
+      }
+    } catch (e) {
+      alert(e.message);
+    }
   };
 
-  const registerSignIn = (e) => {
+  const registerSignIn = async (e) => {
     e.preventDefault();
 
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        if (auth) {
-          console.log(auth);
-        }
-      })
-      .catch((e) => alert(e.message));
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      const user = userCredential.user;
 
+      const userData = {
+        name: user.displayName || "",
+        email: user.email,
+        contact: "",
+        address: "",
+        isQuoraPlus: false,
+        uid: user.uid,
+      };
+
+      await setDoc(doc(db, "users", user.uid), userData);
+      console.log("User document created:", userData);
+    } catch (e) {
+      alert(e.message);
+    }
   };
 
   return (
@@ -101,7 +151,14 @@ function Login() {
               <p>
                 You are now logged out of this browser, but are still logged in
                 with other browsers.{" "}
-                <span style={{ color: "#1a5aff", fontWeight: "350", textDecoration: "underline", cursor: "pointer" }}>
+                <span
+                  style={{
+                    color: "#1a5aff",
+                    fontWeight: "350",
+                    textDecoration: "underline",
+                    cursor: "pointer",
+                  }}
+                >
                   Log out of all browsers.
                 </span>
               </p>

@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import "../css/Groups.css";
 import db from "../firebase";
-// import firebase from "firebase/compat/app";
 import { useNavigate } from "react-router-dom";
-// import { getAuth } from "firebase/auth";
 import CreateSpaceModal from "./CreateSpaceModal";
 
 
 function Groups() {
   const [spaces, setSpaces] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  // const [newSpace, setNewSpace] = useState({ title: "", description: "" });
-  // const [spaceImage, setSpaceImage] = useState(null);
-  // const auth = getAuth();
-  // const currentUser = auth.currentUser;
   const navigate = useNavigate();
 
   useEffect(() => {

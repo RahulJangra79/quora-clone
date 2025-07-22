@@ -55,15 +55,13 @@ function SidebarOptions() {
 
   return (
     <div className="sidebar-options">
-      <div className="sidebar-option">
+      <button
+        className="sidebar-create-space-btn"
+        onClick={() => setShowModal(true)}
+      >
         <Add />
-        <button
-          className="sidebar-create-space-btn"
-          onClick={() => setShowModal(true)}
-        >
-          Create Space
-        </button>
-      </div>
+        Create Space
+      </button>
 
       {singleWordSpaces.map((space) => (
         <div
