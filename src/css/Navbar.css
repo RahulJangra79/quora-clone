@@ -483,7 +483,6 @@
 @media (max-width: 600px) {
     .search-results-box {
         width: 90%;
-        top: 56px;
         padding: 12px;
     }
 
