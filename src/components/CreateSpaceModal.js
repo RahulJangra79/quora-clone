@@ -31,6 +31,10 @@ function CreateSpaceModal({ closeModal, refreshSpaces }) {
 
   const handleCreate = async () => {
     if (!newSpace.title.trim()) return;
+    const keywords = `${newSpace.title} ${newSpace.description || ""}`
+      .toLowerCase()
+      .split(/\s+/);
+
     setIsCreating(true);
 
     try {
@@ -56,8 +60,10 @@ function CreateSpaceModal({ closeModal, refreshSpaces }) {
 
       await db.collection("spaces").add({
         title: newSpace.title,
+        titleLower: newSpace.title.toLowerCase(),
         description: newSpace.description,
         imageUrl,
+        keywords,
         category: newSpace.category || "General",
         createdBy: {
           name: currentUser.displayName,

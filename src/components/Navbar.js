@@ -95,8 +95,8 @@ function Navbar() {
 
             db
               .collection("spaces")
-              .where("title", ">=", lowerTerm)
-              .where("title", "<=", lowerTerm + "\uf8ff")
+              .where("titleLower", ">=", lowerTerm)
+              .where("titleLower", "<=", lowerTerm + "\uf8ff")
               .limit(5)
               .get(),
 
@@ -306,31 +306,66 @@ function Navbar() {
           <div className="search-overlay">
             <div className="search-results-box" ref={containerRef}>
               {searchResults.questions.map((q) => (
-                <p key={q.id} onClick={() => navigate(`/question/${q.id}`)}>
+                <p
+                  key={q.id}
+                  onClick={() => {
+                    navigate(`/question/${q.id}`);
+                    setShowSearchBarTop(false);
+                    setSearchTerm("");
+                  }}
+                >
                   🟦 Question: {q.question}
                 </p>
               ))}
 
               {searchResults.answers.map((a) => (
-                <p key={a.id} onClick={() => navigate(`/answer/${a.id}`)}>
+                <p
+                  key={a.id}
+                  onClick={() => {
+                    navigate(`/answer/${a.id}`);
+                    setShowSearchBarTop(false);
+                    setSearchTerm("");
+                  }}
+                >
                   🟨 Answer: {a.answer}
                 </p>
               ))}
 
               {searchResults.spaces.map((s) => (
-                <p key={s.id} onClick={() => navigate(`/group/${s.id}`)}>
+                <p
+                  key={s.id}
+                  onClick={() => {
+                    navigate(`/group/${s.id}`);
+                    setShowSearchBarTop(false);
+                    setSearchTerm("");
+                  }}
+                >
                   🟪 Space: {s.title}
                 </p>
               ))}
 
               {searchResults.users.map((u) => (
-                <p key={u.uid} onClick={() => navigate(`/user/${u.uid}`)}>
+                <p
+                  key={u.uid}
+                  onClick={() => {
+                    navigate(`/user/${u.uid}`);
+                    setShowSearchBarTop(false);
+                    setSearchTerm("");
+                  }}
+                >
                   🟧 User: {u.name}
                 </p>
               ))}
 
               {searchResults.posts.map((p) => (
-                <p key={p.id} onClick={() => navigate(`/post/${p.id}`)}>
+                <p
+                  key={p.id}
+                  onClick={() => {
+                    navigate(`/post/${p.id}`);
+                    setShowSearchBarTop(false);
+                    setSearchTerm("");
+                  }}
+                >
                   🟥 Post: {p.text || p.post}
                 </p>
               ))}

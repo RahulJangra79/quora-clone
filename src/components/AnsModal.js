@@ -13,10 +13,12 @@ function AnswerModal({ open, handleClose, questionId }) {
 
   const submitAnswer = async () => {
     if (!answer.trim()) return;
+    const keywords = answer.toLowerCase().split(/\s+/);
 
     await db.collection("answers").add({
       questionId,
       answer,
+      keywords,
       timestamp: new Date(),
       user: {
         display: user?.displayName,

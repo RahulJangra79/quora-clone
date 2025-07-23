@@ -51,9 +51,9 @@ function App() {
               <Route path="/" element={<Quora />} />
               <Route path="/following" element={<Following />} />
               <Route path="/answer" element={<Answer />} />
-              <Route path="/answer/:questionId" element={<AnswerPage />} />
+              <Route path="/question/:questionId" element={<AnswerPage />} />
               <Route path="/groups" element={<Groups />} />
-              <Route path="/groups/:groupId" element={<GroupInfo />} />
+              <Route path="/group/:groupId" element={<GroupInfo />} />
               <Route path="/notification" element={<Notification />} />
               <Route path="/user/:uid" element={<User />} />
               <Route path="/help" element={<Help />} />

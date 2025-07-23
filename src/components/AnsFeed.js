@@ -46,9 +46,9 @@ function AnsFeed({ activeTab }) {
     if (!currentUser) return;
 
     const bookmarkItem = {
-        id,
-        type: "question",
-      };
+      id,
+      type: "question",
+    };
 
     await db
       .collection("users")
@@ -204,12 +204,17 @@ function AnsFeed({ activeTab }) {
                   </h5>
                 </div>
 
-                <p className="question-text">{data.question}</p>
+                <p
+                  className="question-text"
+                  onClick={() => navigate(`/question/${id}`)}
+                >
+                  {data.question}
+                </p>
 
                 <div className="question-meta">
                   <span
                     className="question-answers-no"
-                    onClick={() => navigate(`/answer/${id}`)}
+                    onClick={() => navigate(`/question/${id}`)}
                   >
                     {data.answers || 0} Answer{data.answers === 1 ? "" : "s"}
                   </span>
