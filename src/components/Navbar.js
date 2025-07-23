@@ -322,7 +322,7 @@ function Navbar() {
                 <p
                   key={a.id}
                   onClick={() => {
-                    navigate(`/answer/${a.id}`);
+                    navigate(`/question/${a.questionId}`);
                     setShowSearchBarTop(false);
                     setSearchTerm("");
                   }}
