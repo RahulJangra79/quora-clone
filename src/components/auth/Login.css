@@ -246,6 +246,61 @@
   color: gray;
 }
 
+.modal__backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal__content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 360px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal__content h3 {
+  margin-bottom: 16px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.modal__content input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.modal__content button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background-color: #1a5aff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal__content button:hover {
+  background-color: #003ecb;
+}
+
 @media (max-width: 500px) {
   .login {
     align-items: flex-start;

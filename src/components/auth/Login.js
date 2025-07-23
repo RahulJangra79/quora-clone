@@ -4,10 +4,55 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import db, { auth, provider } from "../../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import firebase from "firebase/compat/app";
+import Swal from "sweetalert2";
+
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showResetModal, setShowResetModal] = useState(false);
+
+  const handlePasswordReset = async (emailForReset) => {
+    try {
+      await auth.sendPasswordResetEmail(emailForReset);
+      Swal.fire({
+        icon: "success",
+        title: "Reset Email Sent",
+        text: "Check your inbox to reset your password!",
+        confirmButtonColor: "#1a5aff",
+      });
+      setShowResetModal(false);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.message,
+        confirmButtonColor: "#1a5aff",
+      });
+    }
+  };
+
+  function ForgotPasswordModal({ isOpen, onClose, onReset }) {
+    const [resetEmail, setResetEmail] = useState("");
+
+    if (!isOpen) return null;
+
+    return (
+      <div className="modal__backdrop">
+        <div className="modal__content">
+          <h3>Reset Your Password</h3>
+          <input
+            type="email"
+            placeholder="Enter your registered email"
+            value={resetEmail}
+            onChange={(e) => setResetEmail(e.target.value)}
+          />
+          <button onClick={() => onReset(resetEmail)}>Send Reset Link</button>
+          <button onClick={onClose}>Cancel</button>
+        </div>
+      </div>
+    );
+  }
 
   const signIn = async () => {
     try {
@@ -147,7 +192,18 @@ function Login() {
               </div>
             </div>
             <div className="login__forgButt">
-              <small>Forgot Password?</small>
+              <small
+                style={{ cursor: "pointer", color: "#1a5aff" }}
+                onClick={() => setShowResetModal(true)}
+              >
+                Forgot Password?
+              </small>
+              {/* Add this right before your closing div tag */}
+              <ForgotPasswordModal
+                isOpen={showResetModal}
+                onClose={() => setShowResetModal(false)}
+                onReset={handlePasswordReset}
+              />{" "}
               <button onClick={handleSignIn}>Login</button>
             </div>
             <button onClick={registerSignIn}>Sign up</button>
