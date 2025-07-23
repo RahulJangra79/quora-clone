@@ -380,16 +380,7 @@ function Navbar() {
                 <li>
                   <Link
                     className="avatar-dropdown-link"
-                    to="/content"
-                    onClick={() => setIsAvatarDropdownOpen(false)}
-                  >
-                    Your Content
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    className="avatar-dropdown-link"
-                    to="/bookmarks"
+                    to={`/bookmarks/${user?.uid}`}
                     onClick={() => setIsAvatarDropdownOpen(false)}
                   >
                     Bookmarks
@@ -444,16 +435,6 @@ function Navbar() {
             <button onClick={() => setShowTranslator(false)}>x</button>
           </div>
         )}
-
-        {/* <div className="navbar-quora-question-button">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="navbar-quora-question-btn"
-          >
-            Add Question
-          </button>
-          <KeyboardArrowDownIcon />
-        </div> */}
 
         <div className="navbar-quora-question-button">
           <button

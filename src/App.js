@@ -17,6 +17,7 @@ import AdModal from "./components/AdModal";
 import User from "./components/User";
 import Help from "./components/Help";
 import Bookmarks from "./components/Bookmarks";
+import Post from "./components/Post";
 
 function App() {
   const user = useSelector(selectUser);
@@ -56,7 +57,8 @@ function App() {
               <Route path="/notification" element={<Notification />} />
               <Route path="/user/:uid" element={<User />} />
               <Route path="/help" element={<Help />} />
-              <Route path="/bookmarks" element={<Bookmarks />} />
+              <Route path="/bookmarks/:uid" element={<Bookmarks />} />
+              <Route path="/post/:Id" element={<Post />} />
             </Routes>
           </>
         ) : (

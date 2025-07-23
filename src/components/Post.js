@@ -81,17 +81,22 @@ function Post({ id, post, imageUrl, timestamp, user }) {
   const handleBookmark = async () => {
     if (!currentUser) return;
 
+    const bookmarkItem = {
+      id,
+      type: "post",
+    };
+
     const userRef = db.collection("users").doc(currentUser.uid);
     await userRef.set(
       {
-        bookmarks: firebase.firestore.FieldValue.arrayUnion(id),
+        bookmarks: firebase.firestore.FieldValue.arrayUnion(bookmarkItem),
       },
       { merge: true }
     );
 
     Swal.fire(
       "Bookmarked!",
-      "You can find it later in your saved posts.",
+      "You can find it later in your saved posts and questions.",
       "success"
     );
     setShowDropdown(false);

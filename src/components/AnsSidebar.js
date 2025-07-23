@@ -1,7 +1,6 @@
 import "../css/AnsSidebar.css";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import AssignmentTurnedInOutlinedIcon from "@mui/icons-material/AssignmentTurnedInOutlined";
-import DraftsIcon from "@mui/icons-material/Drafts";
 
 const AnsSidebar = ({ activeTab, setActiveTab }) => {
 
@@ -22,13 +21,6 @@ const AnsSidebar = ({ activeTab, setActiveTab }) => {
         >
           <AssignmentTurnedInOutlinedIcon />
           <span>Answer Requests</span>
-        </div>
-        <div
-          className={`tab-item ${activeTab === "drafts" ? "active" : ""}`}
-          onClick={() => setActiveTab("drafts")}
-        >
-          <DraftsIcon />
-          <span>Drafts</span>
         </div>
       </div>
     </div>

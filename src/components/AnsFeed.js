@@ -44,12 +44,18 @@ function AnsFeed({ activeTab }) {
 
   const handleBookmark = async (id) => {
     if (!currentUser) return;
+
+    const bookmarkItem = {
+        id,
+        type: "question",
+      };
+
     await db
       .collection("users")
       .doc(currentUser.uid)
       .set(
         {
-          bookmarks: firebase.firestore.FieldValue.arrayUnion(id),
+          bookmarks: firebase.firestore.FieldValue.arrayUnion(bookmarkItem),
         },
         { merge: true }
       );
