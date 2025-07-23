@@ -119,7 +119,7 @@ function AnsFeed({ activeTab }) {
     setFollowMap(map);
   };
 
-  const handleFollowToggle = async (followeeId) => {
+  const handleFollowToggle = async (followeeId, userInfo) => {
     if (!currentUser || currentUser.uid === followeeId) return;
     try {
       if (followMap[followeeId]) {
@@ -130,7 +130,13 @@ function AnsFeed({ activeTab }) {
       } else {
         const docRef = await db.collection("follows").add({
           followerId: currentUser.uid,
-          followeeId,
+          followerPhoto: currentUser.photoURL,
+          followerDisplay: currentUser.displayName,
+          followerEmail: currentUser.email,
+          followeeId: userInfo.uid,
+          followeeDisplay: userInfo.display,
+          followeePhoto: userInfo.photo || "",
+          followeeEmail: userInfo.email || "",
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         });
         setFollowMap({ ...followMap, [followeeId]: docRef.id });
@@ -234,7 +240,7 @@ function AnsFeed({ activeTab }) {
                     {!isSelf && (
                       <button
                         className="follow-btn"
-                        onClick={() => handleFollowToggle(data.user?.uid)}
+                        onClick={() => handleFollowToggle(data.user?.uid, data.user)}
                       >
                         {isFollowing ? "Unfollow" : "Follow"}
                       </button>

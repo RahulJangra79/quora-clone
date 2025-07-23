@@ -11,26 +11,6 @@ function SidebarOptions() {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const unsubscribe = db
-  //     .collection("spaces")
-  //     .orderBy("createdAt", "desc")
-  //     .limit(20)
-  //     .onSnapshot((snapshot) => {
-  //       const filtered = snapshot.docs
-  //         .map((doc) => ({ id: doc.id, ...doc.data() }))
-  //         .filter(
-  //           (space) =>
-  //             space.title &&
-  //             typeof space.title === "string" &&
-  //             space.title.trim().split(/\s+/).length === 1
-  //         );
-  //       setSingleWordSpaces(filtered);
-  //     });
-
-  //   return () => unsubscribe();
-  // }, []);
-
   useEffect(() => {
     const unsubscribe = db
       .collection("spaces")
@@ -67,7 +47,7 @@ function SidebarOptions() {
         <div
           key={space.id}
           className="sidebar-option"
-          onClick={() => navigate(`/groups/${space.id}`)}
+          onClick={() => navigate(`/group/${space.id}`)}
         >
           <img src={space.imageUrl} alt={space.title} />
           <p>{space.title}</p>

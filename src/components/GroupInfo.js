@@ -62,6 +62,13 @@ function GroupInfo() {
         const docRef = await db.collection("groupfollows").add({
           groupId,
           userId: currentUser.uid,
+          ownerId: group.createdBy.uid,
+          user: {
+            uid: currentUser.uid,
+            display: currentUser.displayName,
+            photo: currentUser.photoURL,
+            email: currentUser.email,
+          },
           groupTitle: group.title,
           groupImage: group.imageUrl || "",
           groupDescription: group.description || "",
@@ -103,7 +110,7 @@ function GroupInfo() {
             Admins can manage submissions, content, and settings
           </p>
           <div className="admin-detail">
-            <Avatar src={group.createdBy.photo} >
+            <Avatar src={group.createdBy.photo}>
               {group.createdBy?.name.charAt(0)}
             </Avatar>
             <p className="group-admin-name">{group.createdBy.name}</p>

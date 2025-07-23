@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/User.css";
 import Avatar from "@mui/material/Avatar";
 import db from "../firebase";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import Post from "./Post";
+import { getAuth } from "firebase/auth";
 
 function User() {
   const { uid } = useParams();
-  const navigate = useNavigate();
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
   const [userData, setUserData] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [answers, setAnswers] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [spaces, setSpaces] = useState([]);
-  const [questions, setQuestions] = useState([]);
-
   const [isEditing, setIsEditing] = useState(false);
   const [bio, setBio] = useState("");
   const [language, setLanguage] = useState("");
@@ -25,66 +25,35 @@ function User() {
   useEffect(() => {
     if (!uid) return;
 
-    const fetchAllData = async () => {
+    const fetchData = async () => {
       try {
         const userSnap = await db.collection("users").doc(uid).get();
-        if (userSnap.exists) {
-          const data = userSnap.data();
-          setUserData(data);
-          setBio(data.bio || "");
-          setLanguage(data.language || "");
-          setContact(data.contact || "");
-          setAddress(data.address || "");
-        }
+        const user = userSnap.data();
+        setUserData(user);
+        setBio(user.bio || "");
+        setLanguage(user.language || "");
+        setContact(user.contact || "");
+        setAddress(user.address || "");
 
         const postSnap = await db
           .collection("posts")
           .where("user.uid", "==", uid)
           .orderBy("timestamp", "desc")
           .get();
-        setPosts(postSnap.docs.map((doc) => doc.data()));
 
-        const answerSnap = await db
-          .collection("answers")
-          .where("user.uid", "==", uid)
-          .orderBy("timestamp", "desc")
-          .get();
-        setAnswers(answerSnap.docs.map((doc) => doc.data()));
+        setPosts(postSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
 
-        const questionsSnap = await db
-          .collection("questions")
-          .where("user.uid", "==", uid)
-          .orderBy("timestamp", "desc")
-          .get();
-        setQuestions(questionsSnap.docs.map((doc) => doc.data()));
-
-        const followersSnap = await db
+        const followSnap = await db
           .collection("follows")
           .where("followeeId", "==", uid)
           .get();
-        const followerList = followersSnap.docs.map((doc) => {
-          const d = doc.data();
-          return {
-            id: d.followerId,
-            display: d.followerDisplay,
-            photo: d.followerPhoto,
-          };
-        });
-        setFollowers(followerList);
+        setFollowers(followSnap.docs.map((doc) => doc.data()));
 
         const followingSnap = await db
           .collection("follows")
           .where("followerId", "==", uid)
           .get();
-        const followingList = followingSnap.docs.map((doc) => {
-          const d = doc.data();
-          return {
-            id: d.followeeId,
-            display: d.followeeDisplay,
-            photo: d.followeePhoto,
-          };
-        });
-        setFollowing(followingList);
+        setFollowing(followingSnap.docs.map((doc) => doc.data()));
 
         const spaceSnap = await db
           .collection("spaces")
@@ -92,11 +61,11 @@ function User() {
           .get();
         setSpaces(spaceSnap.docs.map((doc) => doc.data()));
       } catch (err) {
-        console.error("Profile fetch error:", err);
+        console.error("Error loading profile:", err);
       }
     };
 
-    fetchAllData();
+    fetchData();
   }, [uid]);
 
   const handleSaveProfile = async () => {
@@ -112,7 +81,7 @@ function User() {
       );
       setIsEditing(false);
     } catch (err) {
-      console.error("Profile update error:", err);
+      console.error("Error saving profile:", err);
     }
   };
 
@@ -163,61 +132,33 @@ function User() {
             <p>Bio: {userData.bio || "N/A"}</p>
           </>
         )}
-        <p>Total {spaces.length} spaces followed</p>
+        <p>{spaces.length} spaces followed</p>
         <p>
           Joined on{" "}
           {userData.timestamp
             ? new Date(userData.timestamp.toDate()).toDateString()
             : "Unknown"}
         </p>
-        <p>{userData.premium ? "Premium" : "Standard"} account</p>
+        <strong>{userData.premium ? "Premium" : "Standard"} account</strong>
       </div>
 
-      <div className="edit-profile">
-        {isEditing ? (
-          <button onClick={handleSaveProfile}>Save Profile</button>
-        ) : (
-          <button onClick={() => setIsEditing(true)}>Edit Profile</button>
-        )}
-      </div>
+      {currentUser?.uid === uid && (
+        <div className="edit-profile">
+          {isEditing ? (
+            <button onClick={handleSaveProfile}>Save Profile</button>
+          ) : (
+            <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+          )}
+        </div>
+      )}
 
       <div className="user-tabs">
-        <button
-          className={activeTab === "answers" ? "active" : ""}
-          onClick={() => setActiveTab("answers")}
-        >
-          Answers ({answers.length})
-        </button>
         <button
           className={activeTab === "posts" ? "active" : ""}
           onClick={() => setActiveTab("posts")}
         >
           Posts ({posts.length})
         </button>
-        <button
-          className={activeTab === "followers" ? "active" : ""}
-          onClick={() => setActiveTab("followers")}
-        >
-          Followers ({followers.length})
-        </button>
-        <button
-          className={activeTab === "following" ? "active" : ""}
-          onClick={() => setActiveTab("following")}
-        >
-          Following ({following.length})
-        </button>
-        <button
-          className={activeTab === "spaces" ? "active" : ""}
-          onClick={() => setActiveTab("spaces")}
-        >
-          Spaces ({spaces.length})
-        </button>
-        <button
-          className={activeTab === "questions" ? "active" : ""}
-          onClick={() => setActiveTab("questions")}
-        >
-          Questions ({questions.length})
-        </button>{" "}
       </div>
 
       {activeTab === "posts" && (
@@ -225,94 +166,15 @@ function User() {
           {posts.length === 0 ? (
             <p>No posts found.</p>
           ) : (
-            posts.map((post, index) => (
-              <div key={index} className="user-post-card">
-                <h4>{post.space || "General"}</h4>
-                <p>{post.text || post.post}</p>
-                {post.imageUrl && <img src={post.imageUrl} alt="Post" />}
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {activeTab === "answers" && (
-        <div className="user-answers">
-          {answers.length === 0 ? (
-            <p>No answers yet.</p>
-          ) : (
-            answers.map((answer, index) => (
-              <div key={index} className="user-answer-card">
-                <p>{answer.answer}</p>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {activeTab === "questions" && (
-        <div className="question-section">
-          {questions.length === 0 ? (
-            <p>No questions found.</p>
-          ) : (
-            questions.map((q, index) => (
-              <div key={index} className="user-question-card">
-                <h4>{q.space || "General"}</h4>
-                <p>{q.question}</p>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {activeTab === "followers" && (
-        <div className="follower-section">
-          {followers.length === 0 ? (
-            <p>No followers yet.</p>
-          ) : (
-            followers.map((f) => (
-              <div
-                key={f.id}
-                className="follower-card"
-                onClick={() => navigate(`/user/${f.id}`)}
-              >
-                <Avatar src={f.photo} />
-                <p>{f.display}</p>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {activeTab === "following" && (
-        <div className="following-section">
-          {following.length === 0 ? (
-            <p>Not following anyone.</p>
-          ) : (
-            following.map((f) => (
-              <div
-                key={f.id}
-                className="following-card"
-                onClick={() => navigate(`/user/${f.id}`)}
-              >
-                <Avatar src={f.photo} />
-                <p>{f.display}</p>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {activeTab === "spaces" && (
-        <div className="space-section">
-          {spaces.length === 0 ? (
-            <p>No spaces followed yet.</p>
-          ) : (
-            spaces.map((s, index) => (
-              <div key={index} className="space-card">
-                <h4>{s.groupTitle}</h4>
-                <p>{s.groupDescription}</p>
-              </div>
+            posts.map((post) => (
+              <Post
+                key={post.id}
+                id={post.id}
+                post={post.post || post.text}
+                imageUrl={post.imageUrl}
+                timestamp={post.timestamp}
+                user={post.user}
+              />
             ))
           )}
         </div>

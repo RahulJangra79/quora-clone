@@ -145,6 +145,9 @@ function Post({ id, post, imageUrl, timestamp, user }) {
       } else {
         const docRef = await db.collection("follows").add({
           followerId: currentUser.uid,
+          followerPhoto: currentUser.photoURL,
+          followerDisplay: currentUser.displayName,
+          followerEmail: currentUser.email,
           followeeId: user.uid,
           followeeDisplay: user.display,
           followeePhoto: user.photo || "",
@@ -186,8 +189,25 @@ function Post({ id, post, imageUrl, timestamp, user }) {
 
     if (type === "up") {
       if (previousVote === "down") downvotes--;
-      if (previousVote !== "up") upvotes++;
-      userVotes[currentUser.uid] = "up";
+      if (previousVote !== "up") {
+        upvotes++;
+        userVotes[currentUser.uid] = "up";
+
+        if (currentUser.uid !== postData.user.uid) {
+          await db.collection("votes").add({
+            userId: postData.user.uid,
+            type: "upvote",
+            postId: id,
+            message: `${currentUser.displayName} upvoted your post.`,
+            triggeredBy: {
+              uid: currentUser.uid,
+              photo: currentUser.photoURL,
+              display: currentUser.displayName,
+            },
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+        }
+      }
     } else if (type === "down") {
       if (previousVote === "up") upvotes--;
       if (previousVote !== "down") downvotes++;
@@ -206,21 +226,42 @@ function Post({ id, post, imageUrl, timestamp, user }) {
   };
 
   const handleCommentSubmit = async () => {
-    if (!newComment.trim() || !currentUser) return;
+    if (!newComment.trim() || !currentUser || !user?.uid) return;
 
-    await db.collection("comments").add({
-      postId: id,
-      comment: newComment.trim(),
-      user: {
-        uid: currentUser.uid,
-        photo: currentUser.photoURL,
-        display: currentUser.displayName,
-      },
-      timestamp: new Date(),
-    });
+    try {
+      await db.collection("comments").add({
+        postId: id,
+        comment: newComment.trim(),
+        user: {
+          uid: currentUser.uid,
+          photo: currentUser.photoURL,
+          display: currentUser.displayName,
+        },
+        targetUserId: user.uid,
+        timestamp: new Date(),
+      });
 
-    setNewComment("");
-    fetchComments();
+      if (currentUser.uid !== user.uid) {
+        await db.collection("comments").add({
+          userId: user.uid,
+          type: "comment",
+          postId: id,
+          message: `${currentUser.displayName} commented on your post.`,
+          triggeredBy: {
+            uid: currentUser.uid,
+            photo: currentUser.photoURL,
+            display: currentUser.displayName,
+          },
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+      }
+
+      setNewComment("");
+      fetchComments();
+    } catch (err) {
+      console.error("Error posting comment:", err);
+      Swal.fire("Error", "Comment could not be posted.", "error");
+    }
   };
 
   const handleShare = async () => {
@@ -344,7 +385,7 @@ function Post({ id, post, imageUrl, timestamp, user }) {
                 <Avatar src={c.user?.photo} />
                 <div>
                   <p>
-                    <strong>{c.user?.display}</strong>
+                    <strong onClick={() => navigate(`/user/${c.user.uid}`)}>{c.user?.display}</strong>
                   </p>
                   <p>{c.comment}</p>
                 </div>

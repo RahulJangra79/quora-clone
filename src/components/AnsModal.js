@@ -15,11 +15,15 @@ function AnswerModal({ open, handleClose, questionId }) {
     if (!answer.trim()) return;
     const keywords = answer.toLowerCase().split(/\s+/);
 
+    const questionDoc = await db.collection("questions").doc(questionId).get();
+    const questionOwnerId = questionDoc.data()?.user?.uid;
+
     await db.collection("answers").add({
       questionId,
       answer,
       keywords,
       timestamp: new Date(),
+      questionOwnerId,
       user: {
         display: user?.displayName,
         email: user?.email,

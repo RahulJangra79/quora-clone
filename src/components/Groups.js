@@ -26,7 +26,7 @@ function Groups() {
   }, []);
 
   const handleViewGroup = (groupId) => {
-    navigate(`/groups/${groupId}`);
+    navigate(`/group/${groupId}`);
   };
 
   const categorizeSpaces = () => {

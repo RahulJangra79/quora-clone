@@ -30,7 +30,7 @@ function WidgetContent() {
         <div
           key={space.id}
           className="widget__content"
-          onClick={() => navigate(`/groups/${space.id}`)}
+          onClick={() => navigate(`/group/${space.id}`)}
         >
           <img src={space.imageUrl} alt={space.title} />
           <div className="widget__contentTitle">
