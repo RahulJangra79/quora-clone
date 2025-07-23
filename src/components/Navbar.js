@@ -18,15 +18,18 @@ import AddQuePostModal from "./AddQuePostModal";
 import QuoraPlusModal from "./QuoraPlusModal";
 import QuoraPlusStatusModal from "./QuoraPlusStatusModal";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
   const [ismodalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
-  const [activeLanguage, setActiveLanguage] = useState("en");
   const [isQuoraPlusModalOpen, setIsQuoraPlusModalOpen] = useState(false);
-  const [showLangList, setShowLangList] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [showPostDropdown, setShowPostDropdown] = useState(false);
+
+  const [showSearchBarTop, setShowSearchBarTop] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState({
     questions: [],
@@ -36,11 +39,29 @@ function Navbar() {
     posts: [],
   });
   const dropdownRef = useRef(null);
+  const containerRef = useRef(null);
   const [isAvatarDropdownOpen, setIsAvatarDropdownOpen] = useState(false);
   const avatarDropdownRef = useRef(null);
   const [isQuoraPlusUser, setIsQuoraPlusUser] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showTranslator, setShowTranslator] = useState(false);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setSearchTerm("");
+        setShowSearchBarTop(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (!searchTerm.trim()) {
@@ -121,7 +142,7 @@ function Navbar() {
           new window.google.translate.TranslateElement(
             {
               pageLanguage: "en",
-              includedLanguages: "en,hi",
+              includedLanguages: "en,hi,bn,ta,te,mr,gu,kn,ml,pa,ur,as,or,sa",
               layout:
                 window.google.translate.TranslateElement.InlineLayout.SIMPLE,
             },
@@ -195,10 +216,25 @@ function Navbar() {
   return (
     <div className="navbar">
       <div className="navbar-quora-header-1">
-        <div className="navbar-quora-search-1">
+        <div
+          className="navbar-quora-search-1"
+          onClick={() => setShowSearchBarTop(true)}
+        >
           <SearchOutlinedIcon />
           <p>Search</p>
         </div>
+        {showSearchBarTop && (
+          <div className="search-bar-top">
+            <input
+              type="text"
+              placeholder="Search Quora"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              autoFocus
+            />
+            <button onClick={() => setShowSearchBarTop(false)}>Close</button>
+          </div>
+        )}
 
         <div className="navbar-quora-logo"></div>
 
@@ -268,25 +304,35 @@ function Navbar() {
         </div>
         {searchTerm && (
           <div className="search-overlay">
-            <div className="search-results-box">
+            <div className="search-results-box" ref={containerRef}>
               {searchResults.questions.map((q) => (
-                <p key={q.id}>🟦 Question: {q.question}</p>
+                <p key={q.id} onClick={() => navigate(`/question/${q.id}`)}>
+                  🟦 Question: {q.question}
+                </p>
               ))}
 
               {searchResults.answers.map((a) => (
-                <p key={a.id}>🟨 Answer: {a.answer}</p>
+                <p key={a.id} onClick={() => navigate(`/answer/${a.id}`)}>
+                  🟨 Answer: {a.answer}
+                </p>
               ))}
 
               {searchResults.spaces.map((s) => (
-                <p key={s.id}>🟪 Space: {s.title}</p>
+                <p key={s.id} onClick={() => navigate(`/group/${s.id}`)}>
+                  🟪 Space: {s.title}
+                </p>
               ))}
 
               {searchResults.users.map((u) => (
-                <p key={u.uid}>🟧 User: {u.name}</p>
+                <p key={u.uid} onClick={() => navigate(`/user/${u.uid}`)}>
+                  🟧 User: {u.name}
+                </p>
               ))}
 
               {searchResults.posts.map((p) => (
-                <p key={p.id}>🟥 Post: {p.text || p.post}</p>
+                <p key={p.id} onClick={() => navigate(`/post/${p.id}`)}>
+                  🟥 Post: {p.text || p.post}
+                </p>
               ))}
             </div>
           </div>
@@ -326,63 +372,55 @@ function Navbar() {
                   <Link
                     className="avatar-dropdown-link"
                     to={`/user/${user?.uid}`}
+                    onClick={() => setIsAvatarDropdownOpen(false)}
                   >
                     Your Profile
                   </Link>
                 </li>
                 <li>
-                  <Link className="avatar-dropdown-link" to="/content">
+                  <Link
+                    className="avatar-dropdown-link"
+                    to="/content"
+                    onClick={() => setIsAvatarDropdownOpen(false)}
+                  >
                     Your Content
                   </Link>
                 </li>
                 <li>
-                  <Link className="avatar-dropdown-link" to="/bookmarks">
+                  <Link
+                    className="avatar-dropdown-link"
+                    to="/bookmarks"
+                    onClick={() => setIsAvatarDropdownOpen(false)}
+                  >
                     Bookmarks
                   </Link>
                 </li>
                 {!isQuoraPlusUser ? (
-                  <li onClick={() => setIsQuoraPlusModalOpen(true)}>
+                  <li
+                    onClick={() => {
+                      setIsQuoraPlusModalOpen(true);
+                      setIsAvatarDropdownOpen(false);
+                    }}
+                  >
                     Try Quora+
                   </li>
                 ) : (
-                  <li onClick={() => setShowStatusModal(true)}>Quora+</li>
+                  <li
+                    onClick={() => {
+                      setIsQuoraPlusModalOpen(true);
+                      setIsAvatarDropdownOpen(false);
+                    }}
+                  >
+                    Quora+
+                  </li>
                 )}
-                <li
-                  onClick={() => setShowLangList((prev) => !prev)}
-                  style={{ cursor: "pointer" }}
-                >
-                  Languages
-                  <span style={{ float: "right" }}>
-                    {showLangList ? "▲" : "▼"}
-                  </span>
-                  {showLangList && (
-                    <ul className="language-sublist">
-                      <li
-                        className={activeLanguage === "en" ? "selected" : ""}
-                        onClick={() => setActiveLanguage("en")}
-                      >
-                        English
-                        {activeLanguage === "en" && (
-                          <span className="checkmark">✔</span>
-                        )}
-                      </li>
-                      <li
-                        className={activeLanguage === "hi" ? "selected" : ""}
-                        onClick={() => {
-                          setActiveLanguage("hi");
-                          setShowTranslator(true);
-                        }}
-                      >
-                        हिन्दी
-                        {activeLanguage === "hi" && (
-                          <span className="checkmark">✔</span>
-                        )}
-                      </li>
-                    </ul>
-                  )}
-                </li>
+                <li onClick={() => setShowTranslator(true)}>Languages</li>
                 <li>
-                  <Link className="avatar-dropdown-link" to="/help">
+                  <Link
+                    className="avatar-dropdown-link"
+                    to="/help"
+                    onClick={() => setIsAvatarDropdownOpen(false)}
+                  >
                     Help
                   </Link>
                 </li>{" "}
@@ -396,51 +434,18 @@ function Navbar() {
 
         <div
           className="navbar-quora-icon navbar-language-icon"
-          onClick={() => setIsLangDropdownOpen((prev) => !prev)}
+          onClick={() => setShowTranslator(true)}
         >
           <LanguageIcon />
-          {isLangDropdownOpen && (
-            <div ref={dropdownRef} className="language-dropdown">
-              <h4>Languages</h4>
-              <ul>
-                <li
-                  className={activeLanguage === "en" ? "selected" : ""}
-                  onClick={() => {
-                    setActiveLanguage("en");
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <span className="dot blue"></span> English{" "}
-                  {activeLanguage === "en" && (
-                    <span className="checkmark">✔</span>
-                  )}
-                </li>
-                <li
-                  className={activeLanguage === "hi" ? "selected" : ""}
-                  onClick={() => {
-                    setActiveLanguage("hi");
-                    setShowTranslator(true);
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <span className="dot green"></span> हिन्दी
-                  {activeLanguage === "hi" && (
-                    <span className="checkmark">✔</span>
-                  )}
-                </li>
-              </ul>
-            </div>
-          )}
-
-          {showTranslator && (
-            <div className="google-translate-popup">
-              <div id="google_translate_element"></div>
-              <button onClick={() => setShowTranslator(false)}>Close</button>
-            </div>
-          )}
         </div>
+        {showTranslator && (
+          <div className="google-translate-popup">
+            <div id="google_translate_element"></div>
+            <button onClick={() => setShowTranslator(false)}>x</button>
+          </div>
+        )}
 
-        <div className="navbar-quora-question-button">
+        {/* <div className="navbar-quora-question-button">
           <button
             onClick={() => setIsModalOpen(true)}
             className="navbar-quora-question-btn"
@@ -448,6 +453,39 @@ function Navbar() {
             Add Question
           </button>
           <KeyboardArrowDownIcon />
+        </div> */}
+
+        <div className="navbar-quora-question-button">
+          <button
+            onClick={() => {
+              setIsModalOpen(true);
+              setActiveTab("question");
+            }}
+            className="navbar-quora-question-btn"
+          >
+            Add Question
+          </button>
+
+          <div
+            onClick={() => setShowPostDropdown((prev) => !prev)}
+            className="navbar-quora-arrow"
+          >
+            <KeyboardArrowDownIcon />
+          </div>
+
+          {showPostDropdown && (
+            <div className="navbar-quora-post-dropdown">
+              <p
+                onClick={() => {
+                  setIsModalOpen(true);
+                  setActiveTab("post");
+                  setShowPostDropdown(false);
+                }}
+              >
+                Post
+              </p>
+            </div>
+          )}
         </div>
 
         <AddQuePostModal

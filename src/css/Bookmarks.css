@@ -1,0 +1,53 @@
+.bookmark{
+    min-height: 100vh;
+}
+
+.bookmark-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.bookmark-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #334;
+  font-size: 24px;
+}
+
+.bookmark-list {
+  list-style: none;
+  padding: 0;
+}
+
+.bookmark-item {
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  background-color: #fff;
+  border-left: 5px solid #4a90e2;
+  border-radius: 4px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.bookmark-item:hover {
+  transform: scale(1.02);
+  background-color: #eaf1ff;
+}
+
+.bookmark-empty {
+  text-align: center;
+  color: #777;
+  font-style: italic;
+}
+
+.loader {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 18px;
+  color: #888;
+}
