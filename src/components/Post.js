@@ -57,25 +57,23 @@ function Post({ id, post, imageUrl, timestamp, user }) {
   }, [id]);
 
   useEffect(() => {
-    const fetchFollowStatus = async () => {
-      if (!currentUser || currentUser.uid === user?.uid) return;
+    if (!currentUser || currentUser.uid === user?.uid) return;
 
-      const snapshot = await db
-        .collection("follows")
-        .where("followerId", "==", currentUser.uid)
-        .where("followeeId", "==", user.uid)
-        .get();
+    const unsubscribe = db
+      .collection("follows")
+      .where("followerId", "==", currentUser.uid)
+      .where("followeeId", "==", user.uid)
+      .onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          setIsFollowing(true);
+          setFollowDocId(snapshot.docs[0].id);
+        } else {
+          setIsFollowing(false);
+          setFollowDocId(null);
+        }
+      });
 
-      if (!snapshot.empty) {
-        setIsFollowing(true);
-        setFollowDocId(snapshot.docs[0].id);
-      } else {
-        setIsFollowing(false);
-        setFollowDocId(null);
-      }
-    };
-
-    fetchFollowStatus();
+    return () => unsubscribe();
   }, [user?.uid, currentUser]);
 
   const handleBookmark = async () => {
@@ -169,9 +167,12 @@ function Post({ id, post, imageUrl, timestamp, user }) {
       .orderBy("timestamp", "asc")
       .get();
 
-    const loadedComments = snapshot.docs.map((doc) => doc.data());
+    const loadedComments = snapshot.docs
+      .map((doc) => doc.data())
+      .filter((c) => c?.comment?.trim() && c?.user?.uid);
+
     setComments(loadedComments);
-    setCommentCount(snapshot.size);
+    setCommentCount(loadedComments.length);
   };
 
   const handleVote = async (type) => {
@@ -286,6 +287,32 @@ function Post({ id, post, imageUrl, timestamp, user }) {
     setShareCount((prev) => prev + 1);
   };
 
+  const handleDeletePost = async () => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await db.collection("posts").doc(id).delete();
+
+        Swal.fire("Deleted!", "Your post has been deleted.", "success");
+
+        navigate("/");
+      } catch (error) {
+        console.error("Error deleting post:", error);
+        Swal.fire("Oops!", "Something went wrong. Try again.", "error");
+      }
+    }
+
+    setShowDropdown(false);
+  };
+
   return (
     <div className="post">
       <div className="post-info">
@@ -363,6 +390,9 @@ function Post({ id, post, imageUrl, timestamp, user }) {
               <p onClick={handleBookmark}>Bookmark</p>
               <p onClick={handleCopyLink}>Copy link</p>
               <p onClick={handleNotInterested}>Not interested in this</p>
+              {currentUser?.uid === user?.uid && (
+                <p onClick={handleDeletePost}>Delete post</p>
+              )}
             </div>
           )}
         </div>
@@ -385,7 +415,9 @@ function Post({ id, post, imageUrl, timestamp, user }) {
                 <Avatar src={c.user?.photo} />
                 <div>
                   <p>
-                    <strong onClick={() => navigate(`/user/${c.user.uid}`)}>{c.user?.display}</strong>
+                    <strong onClick={() => navigate(`/user/${c.user.uid}`)}>
+                      {c.user?.display}
+                    </strong>
                   </p>
                   <p>{c.comment}</p>
                 </div>
